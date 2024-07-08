@@ -35,7 +35,7 @@ const Header = () => {
                 <h1 className={"text-primary md:text-3xl text-xl font-medium"}>Office of Institutional <br/> Research &
                     Analytics
                 </h1>
-                <div className={"flex items-center lg:gap-8 gap-4"}>
+                <div className={`flex items-center max-md:hidden lg:gap-8 gap-4 ${roboto.className}`}>
                     <Link href={"/"} className={"text-[#1e1e1e] font-normal"}>
                         Home
                     </Link>
