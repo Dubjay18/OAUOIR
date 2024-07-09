@@ -17,7 +17,8 @@ const Header = () => {
                         <Image src={"/oau_logo.svg"} alt={"OAU Logo"} width={20} height={20}/>
                         <h1 className={robotoSerif.className}>OBAFEMI AWOLOWO UNIVERSITY</h1>
                     </div>
-                    <Link href={"/"} className={`text-white underline ${roboto.className}`}>
+                    <Link href={"https://oauife.edu.ng/"} target={"_blank"}
+                          className={`text-white underline ${roboto.className}`}>
                         OAUIFE.EDU.NG
                     </Link>
                 </div>
