@@ -1,20 +1,11 @@
 import React from 'react';
 import Image from "next/image";
-import {Roboto, Roboto_Serif} from "next/font/google";
+
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Search} from "lucide-react";
+import {roboto, robotoSerif} from "@/lib/fonts";
 
-const robotoSerif = Roboto_Serif({
-        weight: ["400"],
-        subsets: ["latin"]
-    }
-);
-const roboto = Roboto({
-    weight: ["400"],
-    subsets: ["latin"]
-
-})
 
 const Header = () => {
     return (

@@ -1,11 +1,12 @@
 import React from 'react';
 import Image from "next/image";
+import {robotoSlab} from "@/lib/fonts";
 
-const Hero = () => {
+const HeroSection = () => {
     return (
         <div className={"container flex max-md:flex-col items-center justify-between mt-20"}>
             <div className={"max-w-lg"}>
-                <h3 className={"text-primary md:text-4xl text-2xl"}>
+                <h3 className={`text-primary md:text-4xl text-2xl ${robotoSlab.className}`}>
                     Advancing Knowledge Through Research
                 </h3>
                 <p className={"text-cusGray mt-2 font-medium text-lg max-md:mb-10"}>
@@ -21,4 +22,4 @@ const Hero = () => {
     );
 };
 
-export default Hero;
+export default HeroSection;
