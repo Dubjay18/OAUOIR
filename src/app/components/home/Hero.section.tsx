@@ -15,7 +15,8 @@ const HeroSection = () => {
                 </p>
             </div>
             <div>
-                <Image src={"/home/landscape.png"} alt={"OAU_landscape"} className={"max-md:max-w-md"} height={600}
+                <Image src={"/home/landscape.png"} alt={"OAU_landscape"} className={"max-md:max-w-md max-sm:max-w-sm"}
+                       height={600}
                        width={600}/>
             </div>
         </div>

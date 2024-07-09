@@ -3,7 +3,7 @@ import AboutSection from "@/app/components/home/About.section";
 
 export default function Home() {
     return (
-        <main>
+        <main className={"overflow-x-hidden"}>
             <HeroSection/>
             <AboutSection/>
         </main>

@@ -70,7 +70,7 @@ const Footer = () => {
                     </div>
                     <p className={"text-cusGray font-semibold max-w-md mt-5"}>Advancing Knowledge Through Research</p>
                 </div>
-                <div className={"grid grid-cols-3 lg:gap-48 gap-20"}>
+                <div className={"grid md:grid-cols-3 grid-cols-1  lg:gap-48 gap-20"}>
                     {
                         footerLinks.map((footerLink, index) => (
                             <div key={index}>
@@ -93,7 +93,7 @@ const Footer = () => {
 
                 </div>
             </div>
-            <div className={"flex items-center justify-between py-7"}>
+            <div className={"flex  max-sm:flex-col  items-center justify-between py-7"}>
                 <div className={"flex items-center gap-3"}>
                     <div className={"bg-primary-foreground rounded-full p-3 w-fit flex items-center justify-center"}>
                         <Image src={"/socials/facebook.svg"} alt={"facebook"} width={10} height={10}/>
