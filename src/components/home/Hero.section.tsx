@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { robotoSlab } from "@/lib/fonts";
+import { IbmPlexSans, robotoSlab } from "@/lib/fonts";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
@@ -15,7 +15,11 @@ const HeroSection = () => {
         />
       </div>
       <div className={"max-w-xl max-md:mt-5"}>
-        <p className="text-lg text-semibold max-md:text-center">Introduction</p>
+        <p
+          className={`text-lg text-medium max-md:text-center ${IbmPlexSans.className}`}
+        >
+          Introduction
+        </p>
         <h3
           className={`text-primary md:text-4xl text-2xl max-md:text-center ${robotoSlab.className}`}
         >

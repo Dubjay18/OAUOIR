@@ -1,5 +1,5 @@
 import { robotoSlab } from "@/lib/fonts";
-import AboutGrid from "@/app/components/home/AboutGrid";
+import AboutGrid from "@/components/home/AboutGrid";
 
 const AboutSection = () => {
   return (
