@@ -14,8 +14,8 @@ const AboutGrid = () => {
           <Image
             src={"/home/data-analytics.svg"}
             alt={"Comprehensive Data Analysis"}
-            width={20}
-            height={20}
+            width={40}
+            height={40}
           />
         }
       />
@@ -28,8 +28,8 @@ const AboutGrid = () => {
           <Image
             src={"/home/microscope.svg"}
             alt={"Comprehensive Data Analysis"}
-            width={20}
-            height={20}
+            width={40}
+            height={40}
           />
         }
       />
@@ -42,8 +42,8 @@ const AboutGrid = () => {
           <Image
             src={"/home/report--data.svg"}
             alt={"Comprehensive Data Analysis"}
-            width={20}
-            height={20}
+            width={40}
+            height={40}
           />
         }
       />
@@ -56,8 +56,8 @@ const AboutGrid = () => {
           <Image
             src={"/home/chart-custom.svg"}
             alt={"Comprehensive Data Analysis"}
-            width={20}
-            height={20}
+            width={40}
+            height={40}
           />
         }
       />

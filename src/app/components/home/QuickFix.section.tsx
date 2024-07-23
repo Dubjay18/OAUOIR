@@ -25,7 +25,7 @@ const StatData = [
 
 export default function QuickFixSection() {
   return (
-    <div className="container my-20">
+    <div className="container my-24">
       <p className="mx-auto text-center text-black text-lg font-medium">
         Quick Facts
       </p>
