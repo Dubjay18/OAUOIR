@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 import { roboto, robotoSerif } from "@/lib/fonts";
 import Image from "next/image";
+import Seacrhbox from "./SearchBox";
 
 const Header = () => {
   return (
@@ -35,9 +34,7 @@ const Header = () => {
           </Link>
         </div>
         <div>
-          <Button>
-            <Search className={"text-white"} size={24} />{" "}
-          </Button>
+          <Seacrhbox className="max-w-32" />
         </div>
       </div>
     </header>
