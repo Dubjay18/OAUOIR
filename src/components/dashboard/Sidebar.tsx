@@ -10,7 +10,7 @@ import Link from "next/link";
 import { poppins } from "@/lib/fonts";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-export default function Sidebar() {
+export default function Sidebar({ hidden }: { hidden?: boolean }) {
   const navData = [
     {
       icon: (
@@ -106,7 +106,9 @@ export default function Sidebar() {
     },
   ];
   return (
-    <aside className="w-64 shadow p-4">
+    <aside
+      className={`w-64 bg-white shadow p-4 duration-300 transition-all ${hidden && "-translate-x-[300px] w-0"}`}
+    >
       <nav>
         <ul className="space-y-4">
           {navData.map((navItem, index) => (
