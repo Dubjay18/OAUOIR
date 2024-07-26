@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { roboto, robotoSerif } from "@/lib/fonts";
 import Image from "next/image";
-import Seacrhbox from "./SearchBox";
+import Searchbox from "./SearchBox";
 
 const Header = () => {
+  //TODO: mobile menu
   return (
     <header className={" pt-5"}>
       <div className={" container py-2 flex items-center justify-between"}>
@@ -34,7 +35,7 @@ const Header = () => {
           </Link>
         </div>
         <div>
-          <Seacrhbox className="max-w-32" />
+          <Searchbox className="max-w-32" />
         </div>
       </div>
     </header>

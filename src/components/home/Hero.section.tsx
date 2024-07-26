@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { IbmPlexSans, robotoSlab } from "@/lib/fonts";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -36,9 +37,11 @@ const HeroSection = () => {
         </p>
         <br />
         <div className="flex items-center gap-6 max-md:justify-evenly ">
-          <Button variant={"outline"} size={"lg"}>
-            Go to Dashboard
-          </Button>
+          <Link href="/dashboard">
+            <Button variant={"outline"} size={"lg"}>
+              Go to Dashboard
+            </Button>
+          </Link>
           <Button variant={"outline"} size={"lg"}>
             Quick Start
           </Button>
