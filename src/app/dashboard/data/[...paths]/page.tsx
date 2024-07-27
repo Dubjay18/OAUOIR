@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import useDataPageContent from "@/hooks/useDataPageContent";
-
+import "react-quill/dist/quill.snow.css";
 export default function Page({
   params,
 }: {
@@ -18,5 +18,12 @@ export default function Page({
     return <div>Error: {error}</div>;
   }
 
-  return <div>{content}</div>;
-};
+  return (
+    <div className="ql-snow">
+      <div
+        className="ql-editor"
+        dangerouslySetInnerHTML={{ __html: content || "" }}
+      />
+    </div>
+  );
+}

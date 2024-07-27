@@ -7,7 +7,7 @@ import { Menu } from "lucide-react";
 export default function Nav({
   toggleMobileNav,
 }: {
-  toggleMobileNav: () => void;
+  toggleMobileNav?: () => void;
 }) {
   return (
     <div className="">
@@ -26,13 +26,16 @@ export default function Nav({
           </h1>
         </div>
         <div>
-          <Button
-            variant={"ghost"}
-            className="md:hidden"
-            onClick={toggleMobileNav}
-          >
-            <Menu size={24} />
-          </Button>
+          {toggleMobileNav && (
+            <Button
+              variant={"ghost"}
+              className="md:hidden"
+              onClick={toggleMobileNav}
+            >
+              <Menu size={24} />
+            </Button>
+          )}
+
           <Searchbox className="max-w-32 max-md:hidden" />
         </div>
       </div>
