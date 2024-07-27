@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -9,8 +9,51 @@ import Image from "next/image";
 import Link from "next/link";
 import { poppins } from "@/lib/fonts";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { fetchFolders } from "@/lib/supabase";
 
+interface NavItemProps {
+  title: string;
+  url: string;
+  subpaths?: NavItemProps[];
+  icon?: React.ReactNode;
+}
+export interface Folder {
+  id: string;
+  name: string;
+  parent_id: string | null;
+  is_folder: boolean;
+  content: string | null;
+}
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
+  const [folders, setFolders] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getFolders = async () => {
+      const data = await fetchFolders();
+      setFolders(data as any[]);
+      console.log("data", data);
+    };
+
+    getFolders();
+  }, []);
+
+  const buildFolderTree = (
+    parentId: string | null = null,
+    accumulatedPath: string = "/dashboard/data",
+  ): NavItemProps[] => {
+    return folders
+      .filter((folder) => folder.parent_id === parentId)
+      .map((folder) => {
+        const currentPath = `${accumulatedPath}/${folder.name}`;
+        return {
+          title: folder.name,
+          url: currentPath,
+          subpaths: buildFolderTree(folder.id, currentPath),
+        };
+      });
+  };
+  const folderTree = buildFolderTree();
+
   const navData = [
     {
       icon: (
@@ -35,26 +78,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
       ),
       title: "Data",
       url: "/about",
-      subpaths: [
-        {
-          title: "Data 1",
-          url: "/data/1",
-        },
-        {
-          title: "Data 2",
-          url: "/data/2",
-          subpaths: [
-            {
-              title: "Data 2.1",
-              url: "/data/2/1",
-            },
-            {
-              title: "Data 2.2",
-              url: "/data/2/2",
-            },
-          ],
-        },
-      ],
+      subpaths: folderTree,
     },
     {
       icon: (
@@ -107,7 +131,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   ];
   return (
     <aside
-      className={`w-64 bg-white shadow p-4 duration-300 transition-all ${hidden && "-translate-x-[300px] w-0"}`}
+      className={`w-64 bg-white shadow p-4 duration-300 transition-all ${hidden && "-translate-x-[300px] w-0 h-0 hidden"}`}
     >
       <nav>
         <ul className="space-y-4">
@@ -142,7 +166,7 @@ const NavItem = ({
 
   return (
     <>
-      {subpaths ? (
+      {subpaths && subpaths.length > 0 ? (
         <Collapsible>
           <CollapsibleTrigger
             onClick={toggleOpen}
