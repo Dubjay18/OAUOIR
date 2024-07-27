@@ -189,7 +189,7 @@ const NavItem = ({
             </span>
           </CollapsibleTrigger>
           {isOpen && (
-            <CollapsibleContent>
+            <CollapsibleContent className="ml-4">
               <ul>
                 {subpaths.map((subpath, index) => (
                   <NavItem

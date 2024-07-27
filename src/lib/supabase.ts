@@ -53,19 +53,3 @@ export const getPageContentByPath = async (
 
   return finalFolder.content;
 };
-export const getPageContent = async (fullPath: string): Promise<any> => {
-  // Remove 'dashboard' from the path
-
-  // Fetch the page content from Supabase based on the modified path
-  const { data, error } = await supabase
-    .from("folders")
-    .select("*")
-    .eq("name", fullPath)
-    .single();
-
-  if (error || !data) {
-    return `Path segment "${fullPath}" not found`;
-  }
-
-  return data;
-};
