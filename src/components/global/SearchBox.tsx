@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 
-export default function Seacrhbox({ className = "" }: { className?: string }) {
+export default function Searchbox({ className = "" }: { className?: string }) {
   return (
     <div
       className={`flex bg-[#F4F4F4] border-b-2 border-[#8D8D8D] ${className}`}
