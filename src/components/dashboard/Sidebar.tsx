@@ -77,7 +77,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
         />
       ),
       title: "Data",
-      url: "/about",
+      url: "/dashboard/data",
       subpaths: folderTree,
     },
     {
@@ -176,7 +176,7 @@ const NavItem = ({
               className={`flex items-center ${!icon && "px-4"} gap-5 ${poppins.className}`}
             >
               {icon && icon}
-              {title}
+              <Link href={url}> {title}</Link>
               {isOpen ? (
                 <>
                   <ChevronUp className="h-4 w-4 ml-auto mr-3" />
