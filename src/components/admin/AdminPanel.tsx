@@ -8,6 +8,7 @@ import { fetchFolders } from "@/lib/supabase";
 import { createClient } from "@/lib/supabseClient";
 import { Button } from "../ui/button";
 import { IbmPlexSans, poppins } from "@/lib/fonts";
+import Editor from "./Editor";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -129,6 +130,29 @@ const Admin: React.FC = () => {
     setContent(folder.content || "");
   };
 
+  const handleChangeContent = (content: string) => {
+    setContent(content);
+  };
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: "1" }, { header: "2" }, { font: [] }],
+        [{ size: [] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [
+          { list: "ordered" },
+          { list: "bullet" },
+          { indent: "-1" },
+          { indent: "+1" },
+        ],
+        ["link", "image"],
+        ["clean"],
+        [{ embedVisualization: "Embed Visualization" }], // Custom button
+      ],
+    },
+    embedVisualization: {},
+  };
+
   return (
     <div className="container">
       <h1 className={`text-5xl ${poppins.className} font-bold`}>Admin Panel</h1>
@@ -206,7 +230,7 @@ const Admin: React.FC = () => {
           <h2 className={`${IbmPlexSans.className} text-xl my-2`}>
             Edit Content
           </h2>
-          <ReactQuill value={content} onChange={setContent} />
+          <Editor value={content} onChange={handleChangeContent} />
           <br />
           <Button onClick={handleSaveContent} disabled={loading}>
             Save Content
