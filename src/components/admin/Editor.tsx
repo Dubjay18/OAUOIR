@@ -83,9 +83,6 @@ const Editor: React.FC<{
 
   return (
     <>
-  
-   
-
       <ReactQuill
         value={value}
         onChange={onChange}
