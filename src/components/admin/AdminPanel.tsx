@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { IbmPlexSans, poppins } from "@/lib/fonts";
+import { addFolder, addPage, deleteFolderOrPage, fetchFolders, saveContent } from "@/lib/supabase";
+import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Folder } from "../dashboard/Sidebar";
-import { addFolder, addPage, deleteFolderOrPage, fetchFolders, saveContent } from "@/lib/supabase";
 import { Button } from "../ui/button";
-import { IbmPlexSans, poppins } from "@/lib/fonts";
-import Editor from "./Editor";
 
 const Admin: React.FC = () => {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -15,7 +15,7 @@ const Admin: React.FC = () => {
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const QuillEditor = dynamic(() => import("./Editor"), { ssr: false });
   useEffect(() => {
     const getFolders = async () => {
       const data = await fetchFolders();
@@ -149,10 +149,10 @@ const Admin: React.FC = () => {
           Folder/Page List
         </h2>
         <div>
-          {folders.map((folder) => (
+          {folders.map((folder,i) => (
             <div
               className="flex justify-between items-center p-2 border border-gray-200 rounded-md"
-              key={folder.id}
+              key={`i-${folder.id}`}
             >
               <p
                 className="text-3xl"
@@ -177,7 +177,7 @@ const Admin: React.FC = () => {
           <h2 className={`${IbmPlexSans.className} text-xl my-2`}>
             Edit Content
           </h2>
-          <Editor value={content} onChange={handleChangeContent} />
+          <QuillEditor value={content} onChange={handleChangeContent} />
           <br />
           <Button onClick={handleSaveContent} disabled={loading}>
             Save Content
