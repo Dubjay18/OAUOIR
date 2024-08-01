@@ -1,18 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
-
+import { IbmPlexSans, poppins } from "@/lib/fonts";
+import { addFolder, addPage, deleteFolderOrPage, fetchFolders, saveContent } from "@/lib/supabase";
 import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Folder } from "../dashboard/Sidebar";
-import { fetchFolders } from "@/lib/supabase";
-import { createClient } from "@/lib/supabseClient";
 import { Button } from "../ui/button";
-import { IbmPlexSans, poppins } from "@/lib/fonts";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const Admin: React.FC = () => {
-  const supabase = createClient();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useState<string>("");
@@ -20,7 +15,7 @@ const Admin: React.FC = () => {
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const QuillEditor = dynamic(() => import("./Editor"), { ssr: false });
   useEffect(() => {
     const getFolders = async () => {
       const data = await fetchFolders();
@@ -40,13 +35,7 @@ const Admin: React.FC = () => {
     setError(null);
 
     try {
-      const { error } = await supabase
-        .from("frontend_page_folders")
-        .insert([
-          { name: newFolderName, parent_id: selectedFolderId, is_folder: true },
-        ]);
-
-      if (error) throw error;
+      addFolder(newFolderName, selectedFolderId);
 
       const data = await fetchFolders();
       setFolders(data);
@@ -58,23 +47,12 @@ const Admin: React.FC = () => {
       refetchFolders();
     }
   };
-
   const handleAddPage = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const { error } = await supabase.from("frontend_page_folders").insert([
-        {
-          name: newPageName,
-          parent_id: selectedFolderId,
-          is_folder: false,
-          content: "",
-        },
-      ]);
-
-      if (error) throw error;
-
+      addPage(newPageName, selectedFolderId);
       const data = await fetchFolders();
       setFolders(data);
       setNewPageName("");
@@ -90,13 +68,7 @@ const Admin: React.FC = () => {
     setError(null);
 
     try {
-      const { error } = await supabase
-        .from("frontend_page_folders")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-
+      deleteFolderOrPage(id);
       const data = await fetchFolders();
       setFolders(data);
     } catch (err) {
@@ -111,12 +83,7 @@ const Admin: React.FC = () => {
     setError(null);
 
     try {
-      const { error } = await supabase
-        .from("frontend_page_folders")
-        .update({ content })
-        .eq("id", selectedFolderId);
-
-      if (error) throw error;
+    saveContent(selectedFolderId, content);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -127,6 +94,10 @@ const Admin: React.FC = () => {
   const handleSelectFolderOrPage = (folder: Folder) => {
     setSelectedFolderId(folder.id);
     setContent(folder.content || "");
+  };
+
+  const handleChangeContent = (content: string) => {
+    setContent(content);
   };
 
   return (
@@ -178,10 +149,10 @@ const Admin: React.FC = () => {
           Folder/Page List
         </h2>
         <div>
-          {folders.map((folder) => (
+          {folders.map((folder,i) => (
             <div
               className="flex justify-between items-center p-2 border border-gray-200 rounded-md"
-              key={folder.id}
+              key={`i-${folder.id}`}
             >
               <p
                 className="text-3xl"
@@ -206,7 +177,7 @@ const Admin: React.FC = () => {
           <h2 className={`${IbmPlexSans.className} text-xl my-2`}>
             Edit Content
           </h2>
-          <ReactQuill value={content} onChange={setContent} />
+          <QuillEditor value={content} onChange={handleChangeContent} />
           <br />
           <Button onClick={handleSaveContent} disabled={loading}>
             Save Content

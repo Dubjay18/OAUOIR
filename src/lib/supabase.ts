@@ -53,3 +53,41 @@ export const getPageContentByPath = async (
 
   return finalFolder.content;
 };
+
+// Add a new folder
+export const addFolder = async (name: string, parentId: string | null) => {
+  const { error } = await supabase
+    .from("frontend_page_folders")
+    .insert([{ name, parent_id: parentId, is_folder: true }]);
+
+  if (error) throw new Error(error.message);
+};
+
+// Add a new page
+export const addPage = async (name: string, parentId: string | null) => {
+  const { error } = await supabase
+    .from("frontend_page_folders")
+    .insert([{ name, parent_id: parentId, is_folder: false, content: "" }]);
+
+  if (error) throw new Error(error.message);
+};
+
+// Delete a folder or page
+export const deleteFolderOrPage = async (id: string) => {
+  const { error } = await supabase
+    .from("frontend_page_folders")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+};
+
+// Save content to a page
+export const saveContent = async (id: string | null, content: string) => {
+  const { error } = await supabase
+    .from("frontend_page_folders")
+    .update({ content })
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+};
