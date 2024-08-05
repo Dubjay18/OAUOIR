@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { poppins } from "@/lib/fonts";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { fetchFolders } from "@/lib/supabase";
+import { DataFolderContext } from "@/context/DataFolderContext";
 
 interface NavItemProps {
   title: string;
@@ -25,21 +26,14 @@ export interface Folder {
   content: string | null;
 }
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
-  const [folders, setFolders] = useState<any[]>([]);
+  const folders = useContext(DataFolderContext);
 
-  useEffect(() => {
-    const getFolders = async () => {
-      const data = await fetchFolders();
-      setFolders(data as any[]);
-      console.log("data", data);
-    };
-
-    getFolders();
-  }, []);
-
+  if (!folders) {
+    return <div>Loading...</div>;
+  }
   const buildFolderTree = (
     parentId: string | null = null,
-    accumulatedPath: string = "/dashboard/data",
+    accumulatedPath: string = "/dashboard/data"
   ): NavItemProps[] => {
     return folders
       .filter((folder) => folder.parent_id === parentId)
@@ -131,7 +125,9 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   ];
   return (
     <aside
-      className={`w-64 bg-white shadow p-4 duration-300 transition-all ${hidden && "-translate-x-[300px] w-0 h-0 hidden"}`}
+      className={`w-64 bg-white shadow sticky left-0 p-4 duration-300 transition-all ${
+        hidden && "-translate-x-[300px] w-0 h-0 hidden"
+      }`}
     >
       <nav>
         <ul className="space-y-4">
@@ -168,24 +164,25 @@ const NavItem = ({
     <>
       {subpaths && subpaths.length > 0 ? (
         <Collapsible>
-          <CollapsibleTrigger
-            onClick={toggleOpen}
-            className="rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D]"
-          >
+          <CollapsibleTrigger className="rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D]">
             <span
-              className={`flex items-center ${!icon && "px-4"} gap-5 ${poppins.className}`}
+              className={`flex items-center ${!icon && "px-4"} gap-5 ${
+                poppins.className
+              }`}
             >
               {icon && icon}
               <Link href={url}> {title}</Link>
-              {isOpen ? (
-                <>
-                  <ChevronUp className="h-4 w-4 ml-auto mr-3" />
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="h-4 w-4 ml-auto mr-3" />
-                </>
-              )}
+              <div onClick={toggleOpen} className="ml-auto">
+                {isOpen ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 ml-auto mr-3" />
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 ml-auto mr-3" />
+                  </>
+                )}
+              </div>
             </span>
           </CollapsibleTrigger>
           {isOpen && (
@@ -208,7 +205,9 @@ const NavItem = ({
           <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
             <Link
               href={url}
-              className={`flex items-center ${!icon && "px-4"} gap-5 ${poppins.className}`}
+              className={`flex items-center ${!icon && "px-4"} gap-5 ${
+                poppins.className
+              }`}
             >
               {icon}
               {title}

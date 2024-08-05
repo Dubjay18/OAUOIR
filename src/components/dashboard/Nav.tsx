@@ -10,7 +10,7 @@ export default function Nav({
   toggleMobileNav?: () => void;
 }) {
   return (
-    <div className="">
+    <div className="sticky top-0 w-full bg-white z-20">
       <div className="flex items-center justify-between shadow py-4 px-5">
         <div className={" flex items-center gap-3"}>
           <Image
