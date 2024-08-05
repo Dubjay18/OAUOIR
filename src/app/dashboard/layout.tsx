@@ -1,4 +1,5 @@
 import Dashlayout from "@/components/dashboard/Dashlayout";
+import { DataFolderProvider } from "@/providers/Datafolderprovider";
 
 export default function DashboardLayout({
   children,
@@ -7,7 +8,9 @@ export default function DashboardLayout({
 }>) {
   return (
     <>
-      <Dashlayout>{children}</Dashlayout>
+      <DataFolderProvider>
+        <Dashlayout>{children}</Dashlayout>
+      </DataFolderProvider>
     </>
   );
 }

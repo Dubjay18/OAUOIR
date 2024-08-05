@@ -17,7 +17,7 @@ export default function Page({
       const url = div.getAttribute('data-visualization');
       const visualizationElement = document.createElement('div');
       // Replace this with actual logic to render the visualization
-      visualizationElement.innerHTML = `<iframe src="${url}" width="600" height="400"></iframe>`;
+      visualizationElement.innerHTML = `<div class="iframe-container"><iframe src="${url}"></iframe></div>`;
       div.replaceWith(visualizationElement);
     });
   
@@ -34,9 +34,9 @@ export default function Page({
   }
 
   return (
-    <div className="ql-snow">
+    <div className="ql-snow min-h-screen">
       <div
-        className="ql-editor"
+        className="ql-editor !p-0 h-screen"
         dangerouslySetInnerHTML={{ __html: renderVisualizations(content || '') }}
       />
     </div>
