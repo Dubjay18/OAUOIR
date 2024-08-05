@@ -11,6 +11,7 @@ import { poppins } from "@/lib/fonts";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { fetchFolders } from "@/lib/supabase";
 import { DataFolderContext } from "@/context/DataFolderContext";
+import { Skeleton } from "../ui/skeleton";
 
 interface NavItemProps {
   title: string;
@@ -27,26 +28,48 @@ export interface Folder {
 }
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
   const folders = useContext(DataFolderContext);
+  const [folderTree, setFolderTree] = useState<NavItemProps[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  useEffect(() => {
+    if (folders) {
+      const buildFolderTree = (
+        parentId: string | null = null,
+        accumulatedPath: string = "/dashboard/data"
+      ): NavItemProps[] => {
+        return folders
+          .filter((folder) => folder.parent_id === parentId)
+          .map((folder) => {
+            const currentPath = `${accumulatedPath}/${folder.name}`;
+            return {
+              title: folder.name,
+              url: currentPath,
+              subpaths: buildFolderTree(folder.id, currentPath),
+            };
+          });
+      };
+
+      const tree = buildFolderTree();
+      setFolderTree(tree);
+      setLoading(false);
+    }
+  }, [folders]);
 
   if (!folders) {
-    return <div>Loading...</div>;
+    return (
+      <aside
+        className={`w-64 bg-white shadow sticky left-0 p-4 duration-300 transition-all ${
+          hidden && "-translate-x-[300px] w-0 h-0 hidden"
+        }`}
+      >
+        <div className="space-y-6 my-10">
+          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-4 w-[150px]" />
+        </div>
+      </aside>
+    );
   }
-  const buildFolderTree = (
-    parentId: string | null = null,
-    accumulatedPath: string = "/dashboard/data"
-  ): NavItemProps[] => {
-    return folders
-      .filter((folder) => folder.parent_id === parentId)
-      .map((folder) => {
-        const currentPath = `${accumulatedPath}/${folder.name}`;
-        return {
-          title: folder.name,
-          url: currentPath,
-          subpaths: buildFolderTree(folder.id, currentPath),
-        };
-      });
-  };
-  const folderTree = buildFolderTree();
 
   const navData = [
     {
@@ -72,7 +95,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
       ),
       title: "Data",
       url: "/dashboard/data",
-      subpaths: folderTree,
+      subpaths: folderTree || [],
     },
     {
       icon: (
@@ -138,6 +161,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
               url={navItem.url}
               subpaths={navItem.subpaths}
               icon={navItem.icon}
+              loading={loading}
             />
           ))}
         </ul>
@@ -151,11 +175,13 @@ const NavItem = ({
   url,
   subpaths,
   icon,
+  loading,
 }: {
   title: string;
   url: string;
   subpaths?: { title: string; url: string; subpaths?: any }[];
   icon?: any;
+  loading?: boolean;
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleOpen = () => setIsOpen(!isOpen);
@@ -186,33 +212,47 @@ const NavItem = ({
             </span>
           </CollapsibleTrigger>
           {isOpen && (
-            <CollapsibleContent className="ml-4">
-              <ul>
-                {subpaths.map((subpath, index) => (
-                  <NavItem
-                    key={index}
-                    title={subpath.title}
-                    url={subpath.url}
-                    subpaths={subpath.subpaths}
-                  />
-                ))}
-              </ul>
-            </CollapsibleContent>
+            <>
+              {loading ? (
+                <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
+                  <Skeleton className="h-4 w-[150px]" />
+                </div>
+              ) : (
+                <CollapsibleContent className="ml-4">
+                  <ul>
+                    {subpaths.map((subpath, index) => (
+                      <NavItem
+                        key={index}
+                        title={subpath.title}
+                        url={subpath.url}
+                        subpaths={subpath.subpaths}
+                      />
+                    ))}
+                  </ul>
+                </CollapsibleContent>
+              )}
+            </>
           )}
         </Collapsible>
       ) : (
         <div className="">
-          <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
-            <Link
-              href={url}
-              className={`flex items-center ${!icon && "px-4"} gap-5 ${
-                poppins.className
-              }`}
-            >
-              {icon}
-              {title}
-            </Link>
-          </div>
+          {loading ? (
+            <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
+              <Skeleton className="h-4 w-[150px]" />
+            </div>
+          ) : (
+            <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
+              <Link
+                href={url}
+                className={`flex items-center ${!icon && "px-4"} gap-5 ${
+                  poppins.className
+                }`}
+              >
+                {icon}
+                {title}
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </>
