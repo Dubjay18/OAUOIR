@@ -27,9 +27,8 @@ export interface Folder {
   content: string | null;
 }
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
-  const folders = useContext(DataFolderContext);
+  const { data: folders, isLoading, isError } = useContext(DataFolderContext);
   const [folderTree, setFolderTree] = useState<NavItemProps[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     if (folders) {
       const buildFolderTree = (
@@ -50,7 +49,6 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
 
       const tree = buildFolderTree();
       setFolderTree(tree);
-      setLoading(false);
     }
   }, [folders]);
 
@@ -161,7 +159,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
               url={navItem.url}
               subpaths={navItem.subpaths}
               icon={navItem.icon}
-              loading={loading}
+              loading={isLoading}
             />
           ))}
         </ul>
