@@ -8,9 +8,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <>
-      <DataFolderProvider>
-        <Dashlayout>{children}</Dashlayout>
-      </DataFolderProvider>
+      <Dashlayout>{children}</Dashlayout>
     </>
   );
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { fetchFolders } from "@/lib/supabase";
 import { Folder } from "@/components/dashboard/Sidebar";
 import { DataFolderContext } from "@/context/DataFolderContext";
+import { useQuery } from "@tanstack/react-query";
 
 type DataFolderProviderProps = {
   children: React.ReactNode;
@@ -10,19 +11,9 @@ type DataFolderProviderProps = {
 export const DataFolderProvider: React.FC<DataFolderProviderProps> = ({
   children,
 }) => {
-  const [folders, setFolders] = useState<Folder[] | null>(null);
-
-  useEffect(() => {
-    const getFolders = async () => {
-      const data = await fetchFolders();
-      setFolders(data as Folder[]);
-    };
-
-    getFolders();
-  }, []);
-
+  const query = useQuery({ queryKey: ["folders"], queryFn: fetchFolders });
   return (
-    <DataFolderContext.Provider value={folders}>
+    <DataFolderContext.Provider value={query}>
       {children}
     </DataFolderContext.Provider>
   );
