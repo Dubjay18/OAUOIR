@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
-import { roboto, robotoSerif } from "@/lib/fonts";
+import { IbmPlexSans, roboto, robotoSerif } from "@/lib/fonts";
 import Image from "next/image";
 import Searchbox from "./SearchBox";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataFolderContext } from "@/context/DataFolderContext";
 import { MenuItem } from "./MenuItem";
+import { Folder } from "../dashboard/Sidebar";
 
 const transition = {
   type: "spring",
@@ -72,7 +73,9 @@ const Header = () => {
   ];
 
   return (
-    <header className={" pt-5"}>
+    <header
+      className={` py-5 ${IbmPlexSans.className} border-b border-[#ECECEC]`}
+    >
       <div className={" container py-2 flex items-center justify-between"}>
         <Link href={"/"}>
           <div className={" flex items-center gap-3"}>
@@ -83,7 +86,7 @@ const Header = () => {
               height={40}
             />
             <h1
-              className={`${robotoSerif.className} text-primary font-semibold text-xl`}
+              className={`${IbmPlexSans.className} text-primary font-semibold text-xl`}
             >
               OAUIR
             </h1>
@@ -91,7 +94,8 @@ const Header = () => {
         </Link>
 
         <div
-          className={`flex items-center max-md:hidden lg:gap-8 gap-4 ${roboto.className}`}
+          className={`flex items-center max-md:hidden lg:gap-12 md:gap-8 gap-4 text-lg ${roboto.className}`}
+          onMouseLeave={() => setActive(null)}
         >
           <MenuItem setActive={setActive} active={active} item="Data">
             <div className="grid grid-cols-2 gap-4 text-sm">
