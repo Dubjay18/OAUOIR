@@ -19,6 +19,12 @@ interface NavItemProps {
   subpaths?: NavItemProps[];
   icon?: React.ReactNode;
 }
+interface INavItemProps {
+  route: string;
+  url: string;
+  subroutes?: INavItemProps[];
+  icon?: React.ReactNode;
+}
 export interface Folder {
   id: string;
   name: string;
@@ -28,26 +34,60 @@ export interface Folder {
 }
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
   const { data: folders, isLoading, isError } = useContext(DataFolderContext);
-  const [folderTree, setFolderTree] = useState<NavItemProps[] | null>(null);
+  const [folderTree, setFolderTree] = useState<INavItemProps[] | null>(null);
   useEffect(() => {
-    if (folders) {
-      const buildFolderTree = (
-        parentId: string | null = null,
-        accumulatedPath: string = "/dashboard/data"
-      ): NavItemProps[] => {
-        return folders
-          .filter((folder) => folder.parent_id === parentId)
-          .map((folder) => {
-            const currentPath = `${accumulatedPath}/${folder.name}`;
-            return {
-              title: folder.name,
-              url: currentPath,
-              subpaths: buildFolderTree(folder.id, currentPath),
-            };
-          });
-      };
+    const formatRoutes = (
+      routes: Folder[],
+      parentId = null,
+      accumulatedPath = "/dashboard/data"
+    ) => {
+      const routeMap: Record<string, any> = {};
 
-      const tree = buildFolderTree();
+      // Create a map of routes by their IDs
+      routes.forEach((route) => {
+        const currentPath = `${accumulatedPath}/${route.name}`;
+        routeMap[route.id] = {
+          route: route.name,
+          content: route.content,
+          url: currentPath, // Add the accumulated path to the route
+          subroutes: [],
+        };
+      });
+
+      // Populate the subroutes
+      routes.forEach((route) => {
+        if (route.parent_id) {
+          routeMap[route.parent_id].subroutes.push(routeMap[route.id]);
+        }
+      });
+
+      // Return the top-level routes (those without a parent)
+      return routes
+        .filter((route) => route.parent_id === parentId)
+        .map((route) =>
+          formatRoutesHelper(routeMap[route.id], routeMap, accumulatedPath)
+        );
+    };
+
+    // Helper function to recursively build the folder tree with accumulated paths
+    const formatRoutesHelper = (
+      route: any,
+      routeMap: Record<string, any>,
+      accumulatedPath: string
+    ) => {
+      route.subroutes = route.subroutes.map((subroute: any) => {
+        const updatedPath = `${accumulatedPath}/${subroute.route}`;
+        return formatRoutesHelper(
+          { ...subroute, url: updatedPath },
+          routeMap,
+          updatedPath
+        );
+      });
+
+      return route;
+    };
+    if (folders) {
+      const tree = formatRoutes(folders);
       setFolderTree(tree);
     }
   }, [folders]);
@@ -59,7 +99,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
           hidden && "-translate-x-[300px] w-0 h-0 hidden"
         }`}
       >
-        <div className="space-y-6 my-10">
+        <div className="space-y-6 my-10 cursor-wait">
           <Skeleton className="h-4 w-[150px]" />
           <Skeleton className="h-4 w-[150px]" />
           <Skeleton className="h-4 w-[150px]" />
@@ -177,18 +217,21 @@ const NavItem = ({
 }: {
   title: string;
   url: string;
-  subpaths?: { title: string; url: string; subpaths?: any }[];
+  subpaths?: INavItemProps[];
   icon?: any;
   loading?: boolean;
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const toggleOpen = () => setIsOpen(!isOpen);
+  const toggleOpen = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <>
-      {subpaths && subpaths.length > 0 ? (
-        <Collapsible>
-          <CollapsibleTrigger className="rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D]">
+      {subpaths && !!subpaths.length ? (
+        <div>
+          <div className="rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D]">
             <span
               className={`flex items-center ${!icon && "px-4"} gap-5 ${
                 poppins.className
@@ -199,44 +242,44 @@ const NavItem = ({
               <div onClick={toggleOpen} className="ml-auto">
                 {isOpen ? (
                   <>
-                    <ChevronUp className="h-4 w-4 ml-auto mr-3" />
+                    <ChevronUp className="h-4 w-4 ml-auto mr-3 cursor-pointer" />
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="h-4 w-4 ml-auto mr-3" />
+                    <ChevronDown className="h-4 w-4 ml-auto mr-3 cursor-pointer" />
                   </>
                 )}
               </div>
             </span>
-          </CollapsibleTrigger>
+          </div>
           {isOpen && (
             <>
               {loading ? (
-                <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
-                  <Skeleton className="h-4 w-[150px]" />
+                <div className="rounded-md w-full p-2 my-5  bg-[#63ABFD4D]">
+                  <Skeleton className="h-4 w-[150px] cursor-wait" />
                 </div>
               ) : (
-                <CollapsibleContent className="ml-4">
+                <div className="ml-4">
                   <ul>
                     {subpaths.map((subpath, index) => (
                       <NavItem
                         key={index}
-                        title={subpath.title}
+                        title={subpath.route}
                         url={subpath.url}
-                        subpaths={subpath.subpaths}
+                        subpaths={subpath.subroutes}
                       />
                     ))}
                   </ul>
-                </CollapsibleContent>
+                </div>
               )}
             </>
           )}
-        </Collapsible>
+        </div>
       ) : (
         <div className="">
           {loading ? (
             <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
-              <Skeleton className="h-4 w-[150px]" />
+              <Skeleton className="h-4 w-[150px] cursor-wait" />
             </div>
           ) : (
             <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
