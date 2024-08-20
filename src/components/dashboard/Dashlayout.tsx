@@ -15,11 +15,10 @@ export default function Dashlayout({
   return (
     <>
       <Nav toggleMobileNav={toggleMobileNav} />
-      <div className="flex h-screen  bg-[#F1F1F1] overflow-y-hidden">
+      <div className="flex h-[90vh]  bg-white overflow-y-hidden">
         <Sidebar hidden={mobileNav} />
-        <div className="flex-1">
-          <main className="overflow-y-hidden">{children}</main>
-        </div>
+
+        <main className="flex-1 overflow-y-scroll">{children}</main>
       </div>
     </>
   );

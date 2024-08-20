@@ -13,17 +13,20 @@ export const fetchFolders = async () => {
   return data;
 };
 export const getPageContentByPath = async (
-  path: string[],
+  path: string[]
 ): Promise<string | null> => {
   // Start with the root folder
   let parentId: string | null = null;
 
   for (const segment of path) {
+    console.log(segment, path);
+
     // Fetch the folder/page with the current segment name and parentId
     let query = supabase
       .from("frontend_page_folders")
       .select("*")
       .eq("name", segment);
+    console.log(parentId);
 
     if (parentId) {
       query = query.eq("parent_id", parentId);

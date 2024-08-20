@@ -44,13 +44,18 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
       const routeMap: Record<string, any> = {};
 
       // Create a map of routes by their IDs
+      console.log(routes);
+
       routes.forEach((route) => {
+        console.log(route, "route");
+
         const currentPath = `${accumulatedPath}/${route.name}`;
         routeMap[route.id] = {
           route: route.name,
           content: route.content,
           url: currentPath, // Add the accumulated path to the route
           subroutes: [],
+          parentId: route.parent_id,
         };
       });
 
@@ -75,8 +80,15 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
       routeMap: Record<string, any>,
       accumulatedPath: string
     ) => {
+      console.log(routeMap, "routeMap");
+      console.log(accumulatedPath);
+      if (route.parentId === null) {
+        accumulatedPath = `/dashboard/data/${route.route}`;
+      }
       route.subroutes = route.subroutes.map((subroute: any) => {
         const updatedPath = `${accumulatedPath}/${subroute.route}`;
+        console.log(updatedPath, "updatedPath");
+
         return formatRoutesHelper(
           { ...subroute, url: updatedPath },
           routeMap,
@@ -95,7 +107,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   if (!folders) {
     return (
       <aside
-        className={`w-64 bg-white shadow sticky left-0 p-4 duration-300 transition-all ${
+        className={`w-64 bg-white shadow  left-0 p-4 duration-300 transition-all ${
           hidden && "-translate-x-[300px] w-0 h-0 hidden"
         }`}
       >
