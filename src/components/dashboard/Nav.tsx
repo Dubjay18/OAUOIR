@@ -1,16 +1,68 @@
-import { robotoSerif } from "@/lib/fonts";
+import { IbmPlexSans, robotoSerif } from "@/lib/fonts";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Searchbox from "../global/SearchBox";
 import { Menu } from "lucide-react";
+import Link from "next/link";
 
 export default function Nav({
   toggleMobileNav,
 }: {
   toggleMobileNav?: () => void;
 }) {
+  const navData = [
+    {
+      icon: (
+        <Image
+          src="/dashboard/icons/facts.svg"
+          width={24}
+          height={24}
+          alt="dashboard_facts"
+        />
+      ),
+      title: "Facts",
+      url: "/dashboard/facts",
+    },
+    {
+      icon: (
+        <Image
+          src="/dashboard/icons/document.svg"
+          width={24}
+          height={24}
+          alt="dashboard_services"
+        />
+      ),
+      title: "References",
+      url: "/dashboard/references",
+    },
+    {
+      icon: (
+        <Image
+          src="/dashboard/icons/blog.svg"
+          width={24}
+          height={24}
+          alt="blog"
+        />
+      ),
+      title: "Articles",
+      url: "/dashboard/articles",
+    },
+    {
+      icon: (
+        <Image
+          src="/dashboard/icons/question.svg"
+          width={24}
+          height={24}
+          alt="request_data"
+        />
+      ),
+      title: "Request Data",
+      url: "/dashboard/requst-data",
+    },
+  ];
+
   return (
-    <div className="sticky top-0 w-full bg-white z-20">
+    <div className="sticky top-0 w-full bg-white border-b border-[#ECECEC] z-20">
       <div className="flex items-center justify-between shadow py-4 px-5">
         <div className={" flex items-center gap-3"}>
           <Image
@@ -25,6 +77,15 @@ export default function Nav({
             OAUIR
           </h1>
         </div>
+        <div
+          className={`flex items-center max-md:hidden lg:gap-12 md:gap-8 gap-4 text-lg ${IbmPlexSans.className}`}
+        >
+          {navData.map((navItem, index) => (
+            <Link key={index} href={navItem.url}>
+              {navItem.title}
+            </Link>
+          ))}
+        </div>
         <div>
           {toggleMobileNav && (
             <Button
@@ -36,7 +97,7 @@ export default function Nav({
             </Button>
           )}
 
-          <Searchbox className="max-w-32 max-md:hidden" />
+          <Searchbox className=" max-md:hidden" />
         </div>
       </div>
     </div>
