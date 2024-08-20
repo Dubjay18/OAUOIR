@@ -113,75 +113,15 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
     {
       icon: (
         <Image
-          src="/dashboard/icons/home.svg"
-          width={24}
-          height={24}
-          alt="dashboard_home"
-        />
-      ),
-      title: "Home",
-      url: "/",
-    },
-    {
-      icon: (
-        <Image
           src="/dashboard/icons/data.svg"
           width={24}
           height={24}
           alt="dashboard_data"
         />
       ),
-      title: "Data",
+      title: "Data Browser",
       url: "/dashboard/data",
       subpaths: folderTree || [],
-    },
-    {
-      icon: (
-        <Image
-          src="/dashboard/icons/facts.svg"
-          width={24}
-          height={24}
-          alt="dashboard_facts"
-        />
-      ),
-      title: "Facts",
-      url: "/contact",
-    },
-    {
-      icon: (
-        <Image
-          src="/dashboard/icons/document.svg"
-          width={24}
-          height={24}
-          alt="dashboard_services"
-        />
-      ),
-      title: "References",
-      url: "/services",
-    },
-    {
-      icon: (
-        <Image
-          src="/dashboard/icons/blog.svg"
-          width={24}
-          height={24}
-          alt="blog"
-        />
-      ),
-      title: "Articles",
-      url: "/services",
-    },
-    {
-      icon: (
-        <Image
-          src="/dashboard/icons/question.svg"
-          width={24}
-          height={24}
-          alt="request_data"
-        />
-      ),
-      title: "Request Data",
-      url: "/services",
     },
   ];
   return (

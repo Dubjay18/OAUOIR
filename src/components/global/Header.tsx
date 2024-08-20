@@ -32,7 +32,7 @@ const Header = () => {
         />
       ),
       title: "Facts",
-      url: "/contact",
+      url: "/dashboard/facts",
     },
     {
       icon: (
@@ -44,7 +44,7 @@ const Header = () => {
         />
       ),
       title: "References",
-      url: "/services",
+      url: "/dashboard/references",
     },
     {
       icon: (
@@ -56,7 +56,7 @@ const Header = () => {
         />
       ),
       title: "Articles",
-      url: "/services",
+      url: "/dashboard/articles",
     },
     {
       icon: (
@@ -68,7 +68,7 @@ const Header = () => {
         />
       ),
       title: "Request Data",
-      url: "/services",
+      url: "/dashboard/requst-data",
     },
   ];
 
@@ -94,7 +94,7 @@ const Header = () => {
         </Link>
 
         <div
-          className={`flex items-center max-md:hidden lg:gap-12 md:gap-8 gap-4 text-lg ${roboto.className}`}
+          className={`flex items-center max-md:hidden lg:gap-12 md:gap-8 gap-4 text-lg ${IbmPlexSans.className}`}
           onMouseLeave={() => setActive(null)}
         >
           <MenuItem setActive={setActive} active={active} item="Data">
