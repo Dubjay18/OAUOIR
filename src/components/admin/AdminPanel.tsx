@@ -12,6 +12,9 @@ import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Folder } from "../dashboard/Sidebar";
 import { Button } from "../ui/button";
+import { FolderControls } from "./FolderControls";
+import { FolderList } from "./FolderList";
+import { EditorControls } from "./EditorControls";
 const QuillEditor = dynamic(() => import("./Editor"), { ssr: false });
 
 enum EditorType {
@@ -150,122 +153,35 @@ const Admin: React.FC = () => {
     <div className="container">
       <h1 className={`text-5xl ${poppins.className} font-bold`}>Admin Panel</h1>
       {error && <div style={{ color: "red" }}>{error}</div>}
-      <div className="flex items-center gap-5 w-full">
-        <div className="flex flex-col w-full">
-          <label>
-            New Folder Name:
-            <div className="flex bg-[#F4F4F4] border-b-2  border-[#8D8D8D]">
-              <input
-                type="text"
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                className="h-12 px-2 bg-transparent w-full outline-none"
-              />
-            </div>
-          </label>
-          <br />
-          <Button
-            variant={"outline"}
-            onClick={handleAddFolder}
-            disabled={loading}
-          >
-            Add Folder
-          </Button>
-        </div>
-        <div className="flex flex-col w-full">
-          <label>
-            New Page Name:
-            <div className="flex bg-[#F4F4F4] border-b-2  border-[#8D8D8D]">
-              <input
-                type="text"
-                value={newPageName}
-                onChange={(e) => setNewPageName(e.target.value)}
-                className="h-12 px-2 bg-transparent w-full outline-none"
-              />
-            </div>
-          </label>
-          <br />
-          <Button onClick={handleAddPage} disabled={loading}>
-            Add Page
-          </Button>
-        </div>
-      </div>
-      <div>
-        <h2 className={`${poppins.className} text-2xl font-semibold my-5`}>
-          Folder/Page List
-        </h2>
-        <div>
-          {folders.map((folder, i) => (
-            <div
-              className="flex justify-between items-center p-2 border border-gray-200 rounded-md"
-              key={`i-${folder.id}`}
-            >
-              <p
-                className="text-3xl"
-                onClick={() => handleSelectFolderOrPage(folder)}
-              >
-                {folder.is_folder ? "📁" : "📄"} {folder.name}
-              </p>
-              <Button
-                variant={"destructive"}
-                onClick={() => handleDeleteFolderOrPage(folder.id)}
-                disabled={loading}
-                size={"sm"}
-              >
-                Delete
-              </Button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex items-center justify-center">
-        <div className="flex items-center  gap mx-auto mt-10">
-          <Button
-            variant={editorType == EditorType.Article ? "default" : "ghost"}
-            onClick={() => setEditorType(EditorType.Article)}
-          >
-            Article + Embed
-          </Button>{" "}
-          - or -
-          <Button
-            variant={editorType == EditorType.Embed ? "default" : "ghost"}
-            onClick={() => setEditorType(EditorType.Embed)}
-          >
-            Full Embed
-          </Button>
-        </div>
-      </div>
-      {selectedFolderId && editorType == EditorType.Article && (
-        <div>
-          <h2 className={`${IbmPlexSans.className} text-xl my-2`}>
-            Edit Content
-          </h2>
-          <QuillEditor value={content} onChange={handleChangeContent} />
-          <br />
-          <Button onClick={handleSaveContent} disabled={loading}>
-            Save Content
-          </Button>
-        </div>
-      )}
-      {selectedFolderId && editorType == EditorType.Embed && (
-        <div>
-          <h2 className={`${IbmPlexSans.className} text-xl my-2`}>
-            Add Embed link
-          </h2>
-          <input
-            value={fullEmbedContent}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFullEmbedContent(e.target.value);
-            }}
-            className="w-full h-10 p-2 rounded-md border border-neutral-300"
-          />
-          <br />
-          <br />
-          <Button onClick={handleSaveContent} disabled={loading}>
-            Save Content
-          </Button>
-        </div>
-      )}
+
+      <FolderControls
+        newFolderName={newFolderName}
+        setNewFolderName={setNewFolderName}
+        newPageName={newPageName}
+        setNewPageName={setNewPageName}
+        handleAddFolder={handleAddFolder}
+        handleAddPage={handleAddPage}
+        loading={loading}
+      />
+
+      <FolderList
+        folders={folders}
+        handleSelectFolderOrPage={handleSelectFolderOrPage}
+        handleDeleteFolderOrPage={handleDeleteFolderOrPage}
+        loading={loading}
+      />
+
+      <EditorControls
+        selectedFolderId={selectedFolderId}
+        editorType={editorType}
+        setEditorType={setEditorType}
+        content={content}
+        fullEmbedContent={fullEmbedContent}
+        handleSaveContent={handleSaveContent}
+        setFullEmbedContent={setFullEmbedContent}
+        handleChangeContent={handleChangeContent}
+        loading={loading}
+      />
     </div>
   );
 };
