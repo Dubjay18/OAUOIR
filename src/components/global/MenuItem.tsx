@@ -1,34 +1,46 @@
-"use client"
-import {motion} from "framer-motion";
+"use client";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 const transition = {
-    type: "spring",
-    mass: 0.5,
-    damping: 11.5,
-    stiffness: 100,
-    restDelta: 0.001,
-    restSpeed: 0.001,
-  };
-  
+  type: "spring",
+  mass: 0.5,
+  damping: 11.5,
+  stiffness: 100,
+  restDelta: 0.001,
+  restSpeed: 0.001,
+};
+
 export const MenuItem = ({
   setActive,
   active,
   item,
   children,
+  href,
 }: {
   setActive: (item: string) => void;
   active: string | null;
   item: string;
   children?: React.ReactNode;
+  href?: string;
 }) => {
   return (
     <div onMouseEnter={() => setActive(item)} className="relative ">
-      <motion.p
-        transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
-      >
-        {item}
-      </motion.p>
+      {href ? (
+        <Link
+          href={href}
+          className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
+        >
+          {item}
+        </Link>
+      ) : (
+        <motion.p
+          transition={{ duration: 0.3 }}
+          className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
+        >
+          {item}
+        </motion.p>
+      )}
       {active !== null && (
         <motion.div
           initial={{ opacity: 0, scale: 0.85, y: 10 }}

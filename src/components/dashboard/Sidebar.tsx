@@ -39,7 +39,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
     const formatRoutes = (
       routes: Folder[],
       parentId = null,
-      accumulatedPath = "/dashboard/data"
+      accumulatedPath = "/data"
     ) => {
       const routeMap: Record<string, any> = {};
 
