@@ -47,15 +47,13 @@ const Admin: React.FC = () => {
     setFolders(data);
   };
 
-  const handleAddFolder = async () => {
+  const handleAddFolder = async (folderId: string) => {
     setLoading(true);
     setError(null);
 
+    console.log(newFolderName, "n1");
     try {
-      addFolder(newFolderName, selectedFolderId);
-
-      const data = await fetchFolders();
-      setFolders(data);
+      addFolder(newFolderName, folderId);
       setNewFolderName("");
     } catch (err) {
       setError((err as Error).message);

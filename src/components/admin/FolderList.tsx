@@ -57,12 +57,14 @@ export const FolderList: React.FC<FolderListProps> = ({
             } duration-300 transition-all cursor-pointer rounded-md`}
             key={`i-${folder.id}`}
           >
-            <p
-              className="text-3xl"
+            <div
+              className="w-full"
               onClick={() => handleSelectFolderOrPage(folder)}
             >
-              {folder.is_folder ? "📁" : "📄"} {folder.name}
-            </p>
+              <p className="text-3xl">
+                {folder.is_folder ? "📁" : "📄"} {folder.name}
+              </p>
+            </div>
             <Button
               variant={"destructive"}
               onClick={() => handleDeleteFolderOrPage(folder.id)}

@@ -16,7 +16,7 @@ interface FolderControlsProps {
   setNewFolderName: (name: string) => void;
   newPageName: string;
   setNewPageName: (name: string) => void;
-  handleAddFolder: () => void;
+  handleAddFolder: (folderId: string) => void;
   handleAddPage: (folderId: string) => void;
   loading: boolean;
   error: any;
@@ -36,9 +36,17 @@ export const FolderControls: React.FC<FolderControlsProps> = ({
 }) => {
   const [folderId, setFolderId] = React.useState<string | null>(null);
   const [open, setOpen] = React.useState(false);
+  const [openFolder, setOpenFolder] = React.useState(false);
   const dialogSubmit = () => {
     handleAddPage(folderId as string);
     if (!error && !loading) setOpen(false);
+    console.log(error);
+  };
+  const dialogSubmitFolder = () => {
+    console.log(folderId, "folderId", newFolderName);
+
+    handleAddFolder(folderId as string);
+    if (!error && !loading) setOpenFolder(false);
     console.log(error);
   };
 
@@ -57,13 +65,23 @@ export const FolderControls: React.FC<FolderControlsProps> = ({
           </div>
         </label>
         <br />
-        <Button
-          variant={"outline"}
-          onClick={handleAddFolder}
-          disabled={loading || !newFolderName || newFolderName === ""}
+        <FolderDialog
+          folderId={folderId}
+          setFolderId={setFolderId}
+          folders={routes}
+          open={openFolder}
+          submit={dialogSubmitFolder}
+          loading={loading}
         >
-          Add Folder
-        </Button>
+          <Button
+            variant={"outline"}
+            type="button"
+            onClick={() => setOpenFolder(true)}
+            disabled={loading || !newFolderName || newFolderName === ""}
+          >
+            Add Folder
+          </Button>
+        </FolderDialog>
       </div>
       <div className="flex flex-col w-full">
         <label>
@@ -87,6 +105,7 @@ export const FolderControls: React.FC<FolderControlsProps> = ({
           loading={loading}
         >
           <Button
+            type="button"
             disabled={loading || newPageName === ""}
             onClick={() => setOpen(true)}
           >
