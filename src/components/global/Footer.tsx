@@ -67,10 +67,10 @@ const Footer = () => {
               Advancing Knowledge Through Research
             </p>
           </div>
-          <div className={"flex justify-between w-1/2"}>
+          <div className={"flex justify-between md:w-1/2"}>
             {footerLinks.map((footerLink, index) => (
               <div key={index}>
-                <p className={"font-semibold text-[#FECD3F] text-lg mb-4"}>
+                <p className={"font-semibold text-[#FECD3F] md:text-lg mb-4"}>
                   {footerLink.title}
                 </p>
                 {footerLink.title == "Social Media" ? (

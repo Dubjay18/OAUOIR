@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Nav from "./Nav";
 import Sidebar from "./Sidebar";
+import Header from "../global/Header";
 
 export default function Dashlayout({
   children,
@@ -13,13 +14,13 @@ export default function Dashlayout({
     setMobileNav((prev) => !prev);
   };
   return (
-    <>
-      <Nav toggleMobileNav={toggleMobileNav} />
-      <div className="flex h-[90vh]  bg-white overflow-y-hidden">
+    <div className="overflow-y-hidden  h-auto">
+      <Header full />
+      <div className="flex   bg-white overflow-hidden w-auto h-[90vh]">
         <Sidebar hidden={mobileNav} />
 
         <main className="flex-1">{children}</main>
       </div>
-    </>
+    </div>
   );
 }
