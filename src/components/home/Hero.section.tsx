@@ -6,7 +6,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <div className={"container flex max-md:flex-col  justify-between mt-20"}>
-      <div>
+      <div className="flex items-center justify-center">
         <Image
           src={"/home/landscape.png"}
           alt={"OAU_landscape"}

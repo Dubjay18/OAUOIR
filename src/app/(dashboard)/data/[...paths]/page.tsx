@@ -49,7 +49,7 @@ export default function Page({
     console.log(content, "content");
 
     return (
-      <div className="embed-container min-h-screen">
+      <div className="embed-container">
         <iframe
           src={fullEmbedUrl(content || "") || ""}
           className="w-full h-full"

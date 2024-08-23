@@ -12,6 +12,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { fetchFolders } from "@/lib/supabase";
 import { DataFolderContext } from "@/context/DataFolderContext";
 import { Skeleton } from "../ui/skeleton";
+import { usePathname } from "next/navigation";
 
 interface NavItemProps {
   title: string;
@@ -19,7 +20,7 @@ interface NavItemProps {
   subpaths?: NavItemProps[];
   icon?: React.ReactNode;
 }
-interface INavItemProps {
+export interface INavItemProps {
   route: string;
   url: string;
   subroutes?: INavItemProps[];
@@ -35,6 +36,7 @@ export interface Folder {
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
   const { data: folders, isLoading, isError } = useContext(DataFolderContext);
   const [folderTree, setFolderTree] = useState<INavItemProps[] | null>(null);
+  const pathanme = usePathname();
   useEffect(() => {
     const formatRoutes = (
       routes: Folder[],
@@ -138,12 +140,14 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   ];
   return (
     <aside
-      className={`w-64 bg-white shadow sticky left-0 p-4 duration-300 transition-all ${
-        hidden && "-translate-x-[300px] w-0 h-0 hidden"
-      }`}
+      className={`w-64 max-md:hidden bg-white shadow sticky left-0 p-4 duration-300 transition-all `}
     >
-      <nav>
-        <ul className="space-y-4">
+      <nav
+        className={`md:hidden  ${
+          hidden && "-translate-x-[300px] w-0 h-0 hidden"
+        }`}
+      >
+        <ul className="space-y-3">
           {navData.map((navItem, index) => (
             <NavItem
               key={index}
@@ -152,6 +156,22 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
               subpaths={navItem.subpaths}
               icon={navItem.icon}
               loading={isLoading}
+              currentPath={pathanme}
+            />
+          ))}
+        </ul>
+      </nav>
+      <nav className="max-md:hidden">
+        <ul className="space-y-3">
+          {navData.map((navItem, index) => (
+            <NavItem
+              key={index}
+              title={navItem.title}
+              url={navItem.url}
+              subpaths={navItem.subpaths}
+              icon={navItem.icon}
+              loading={isLoading}
+              currentPath={pathanme}
             />
           ))}
         </ul>
@@ -160,18 +180,20 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   );
 }
 
-const NavItem = ({
+export const NavItem = ({
   title,
   url,
   subpaths,
   icon,
   loading,
+  currentPath,
 }: {
   title: string;
   url: string;
   subpaths?: INavItemProps[];
   icon?: any;
   loading?: boolean;
+  currentPath?: string;
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleOpen = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -183,7 +205,11 @@ const NavItem = ({
     <>
       {subpaths && !!subpaths.length ? (
         <div>
-          <div className="rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D]">
+          <div
+            className={`rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D] ${
+              currentPath == url && "bg-[#63ABFD4D]"
+            }`}
+          >
             <span
               className={`flex items-center ${!icon && "px-4"} gap-5 ${
                 poppins.className
@@ -207,7 +233,7 @@ const NavItem = ({
           {isOpen && (
             <>
               {loading ? (
-                <div className="rounded-md w-full p-2 my-5  bg-[#63ABFD4D]">
+                <div className="rounded-md w-full p-2 my-2  bg-[#63ABFD4D]">
                   <Skeleton className="h-4 w-[150px] cursor-wait" />
                 </div>
               ) : (
@@ -219,6 +245,7 @@ const NavItem = ({
                         title={subpath.route}
                         url={subpath.url}
                         subpaths={subpath.subroutes}
+                        currentPath={currentPath}
                       />
                     ))}
                   </ul>
@@ -230,11 +257,15 @@ const NavItem = ({
       ) : (
         <div className="">
           {loading ? (
-            <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
+            <div className="rounded-md w-full p-2 my-3  hover:bg-[#63ABFD4D]">
               <Skeleton className="h-4 w-[150px] cursor-wait" />
             </div>
           ) : (
-            <div className="rounded-md w-full p-2 my-5  hover:bg-[#63ABFD4D]">
+            <div
+              className={`rounded-md w-full p-2 my-3  hover:bg-[#63ABFD4D] ${
+                currentPath == url && "bg-[#63ABFD4D]"
+              }`}
+            >
               <Link
                 href={url}
                 className={`flex items-center ${!icon && "px-4"} gap-5 ${
