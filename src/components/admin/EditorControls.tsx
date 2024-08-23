@@ -32,21 +32,23 @@ export const EditorControls: React.FC<EditorControlsProps> = ({
   return (
     <div>
       <div className="flex items-center justify-center">
-        <div className="flex items-center gap mx-auto mt-10">
-          <Button
-            variant={editorType == EditorType.Article ? "default" : "ghost"}
-            onClick={() => setEditorType(EditorType.Article)}
-          >
-            Article + Embed
-          </Button>{" "}
-          - or -
-          <Button
-            variant={editorType == EditorType.Embed ? "default" : "ghost"}
-            onClick={() => setEditorType(EditorType.Embed)}
-          >
-            Full Embed
-          </Button>
-        </div>
+        {selectedFolderId && (
+          <div className="flex items-center gap mx-auto mt-10">
+            <Button
+              variant={editorType == EditorType.Article ? "default" : "ghost"}
+              onClick={() => setEditorType(EditorType.Article)}
+            >
+              Article + Embed
+            </Button>{" "}
+            - or -
+            <Button
+              variant={editorType == EditorType.Embed ? "default" : "ghost"}
+              onClick={() => setEditorType(EditorType.Embed)}
+            >
+              Full Embed
+            </Button>
+          </div>
+        )}
       </div>
       {selectedFolderId && editorType == EditorType.Article && (
         <div>

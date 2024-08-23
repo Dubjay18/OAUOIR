@@ -1,4 +1,5 @@
 "use client";
+
 import { IbmPlexSans, poppins } from "@/lib/fonts";
 import {
   addFolder,
@@ -63,18 +64,19 @@ const Admin: React.FC = () => {
       refetchFolders();
     }
   };
-  const handleAddPage = async () => {
+  const handleAddPage = async (folderId: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      addPage(newPageName, selectedFolderId);
+      addPage(newPageName, folderId);
       const data = await fetchFolders();
       setFolders(data);
       setNewPageName("");
     } catch (err) {
       setError((err as Error).message);
     } finally {
+      refetchFolders();
       setLoading(false);
     }
   };
@@ -85,8 +87,7 @@ const Admin: React.FC = () => {
 
     try {
       deleteFolderOrPage(id);
-      const data = await fetchFolders();
-      setFolders(data);
+      setFolders(folders.filter((folder) => folder.id !== id));
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -161,7 +162,7 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container py-5">
       <h1 className={`text-5xl ${poppins.className} font-bold`}>Admin Panel</h1>
       {error && <div style={{ color: "red" }}>{error}</div>}
 
@@ -173,6 +174,8 @@ const Admin: React.FC = () => {
         handleAddFolder={handleAddFolder}
         handleAddPage={handleAddPage}
         loading={loading}
+        routes={folders}
+        error={error}
       />
 
       <FolderList
@@ -180,6 +183,7 @@ const Admin: React.FC = () => {
         handleSelectFolderOrPage={handleSelectFolderOrPage}
         handleDeleteFolderOrPage={handleDeleteFolderOrPage}
         loading={loading}
+        selectedId={selectedFolderId as string}
       />
 
       <EditorControls
