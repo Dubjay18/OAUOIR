@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import dynamic from "next/dynamic";
 import { EditorType } from "@/types";
+import { Loader2 } from "lucide-react";
 
 const QuillEditor = dynamic(() => import("./Editor"), { ssr: false });
 
@@ -53,7 +54,11 @@ export const EditorControls: React.FC<EditorControlsProps> = ({
           <QuillEditor value={content} onChange={handleChangeContent} />
           <br />
           <Button onClick={handleSaveContent} disabled={loading}>
-            Save Content
+            {loading ? (
+              <Loader2 className="animate-spin" size={24} />
+            ) : (
+              "Save Content"
+            )}
           </Button>
         </div>
       )}

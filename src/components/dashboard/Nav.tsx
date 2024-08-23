@@ -21,20 +21,9 @@ export default function Nav({
         />
       ),
       title: "Facts",
-      url: "/dashboard/facts",
+      url: "/facts",
     },
-    {
-      icon: (
-        <Image
-          src="/dashboard/icons/document.svg"
-          width={24}
-          height={24}
-          alt="dashboard_services"
-        />
-      ),
-      title: "References",
-      url: "/dashboard/references",
-    },
+
     {
       icon: (
         <Image
@@ -45,7 +34,7 @@ export default function Nav({
         />
       ),
       title: "Articles",
-      url: "/dashboard/articles",
+      url: "/articles",
     },
     {
       icon: (
@@ -64,7 +53,7 @@ export default function Nav({
   return (
     <div className="sticky top-0 w-full bg-white border-b border-[#ECECEC] z-20">
       <div className="flex items-center justify-between shadow py-4 px-5">
-        <div className={" flex items-center gap-3"}>
+        <Link href={"/"} className={" flex items-center gap-3"}>
           <Image
             src={"/oau_logo.svg"}
             alt={"OAU Logo"}
@@ -72,11 +61,11 @@ export default function Nav({
             height={40}
           />
           <h1
-            className={`${robotoSerif.className} text-primary font-semibold text-xl`}
+            className={`${IbmPlexSans.className} text-primary font-semibold text-xl`}
           >
             OAUIR
           </h1>
-        </div>
+        </Link>
         <div
           className={`flex items-center max-md:hidden lg:gap-12 md:gap-8 gap-4 text-lg ${IbmPlexSans.className}`}
         >

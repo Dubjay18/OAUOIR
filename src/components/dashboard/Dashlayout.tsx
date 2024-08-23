@@ -18,7 +18,7 @@ export default function Dashlayout({
       <div className="flex h-[90vh]  bg-white overflow-y-hidden">
         <Sidebar hidden={mobileNav} />
 
-        <main className="flex-1 overflow-y-scroll">{children}</main>
+        <main className="flex-1">{children}</main>
       </div>
     </>
   );
