@@ -83,7 +83,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
       console.log(routeMap, "routeMap");
       console.log(accumulatedPath);
       if (route.parentId === null) {
-        accumulatedPath = `/dashboard/data/${route.route}`;
+        accumulatedPath = `/data/${route.route}`;
       }
       route.subroutes = route.subroutes.map((subroute: any) => {
         const updatedPath = `${accumulatedPath}/${subroute.route}`;
