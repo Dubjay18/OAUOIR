@@ -37,7 +37,7 @@ const HeroSection = () => {
         </p>
         <br />
         <div className="flex items-center gap-6 max-md:justify-evenly ">
-          <Link href="/dashboard">
+          <Link href="/data">
             <Button variant={"outline"} size={"lg"}>
               Go to Dashboard
             </Button>

@@ -132,10 +132,20 @@ const Admin: React.FC = () => {
 
     return doc.body.innerHTML;
   };
+
+  const getFullEmbedUrl = (content: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+    const visualizationDivs = doc.querySelectorAll("[data-full-embed]");
+    if (!visualizationDivs.length) return "";
+    return visualizationDivs[0].getAttribute("data-full-embed");
+  };
   const handleSelectFolderOrPage = (folder: Folder) => {
+    console.log(folder);
+
     setSelectedFolderId(folder.id);
     setContent(folder.content || "");
-    setFullEmbedContent(FindFullEmbedDiviContent(folder.content || ""));
+    setFullEmbedContent(getFullEmbedUrl(folder.content || "") as any);
   };
 
   const handleChangeContent = (content: string) => {
@@ -145,6 +155,7 @@ const Admin: React.FC = () => {
 
   const handleFullEmbedContent = (content: string) => {
     if (!selectedFolderId) return;
+    console.log(content);
 
     return `<div class="visualization" data-full-embed="${content}" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin: 10px 0px; display: flex; justify-content: center; align-items: center; font-size: 1.2em; font-weight: bold; color: rgb(51, 51, 51);">Visualization: ${content}</div>`;
   };
