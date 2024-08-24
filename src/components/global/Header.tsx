@@ -27,7 +27,7 @@ const Header = ({ full }: { full?: boolean }) => {
     },
     {
       route: "Request Data",
-      url: "/requst-data",
+      url: "/request-data",
     },
   ];
   const midNavData = [
@@ -37,7 +37,7 @@ const Header = ({ full }: { full?: boolean }) => {
     },
     {
       route: "Request Data",
-      url: "/requst-data",
+      url: "/request-data",
     },
   ];
   useEffect(() => {
