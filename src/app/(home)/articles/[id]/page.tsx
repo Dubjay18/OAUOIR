@@ -20,8 +20,8 @@ function page() {
             nisi ut aliquip ex ea commodo consequat.
           </p>
           <blockquote>
-            "Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur."
+          &quot;Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.&quot;
           </blockquote>
           <p>
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
