@@ -46,7 +46,7 @@ export default function Nav({
         />
       ),
       title: "Request Data",
-      url: "/dashboard/requst-data",
+      url: "/request-data",
     },
   ];
 
