@@ -161,28 +161,34 @@ const Header = ({ full }: { full?: boolean }) => {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute  bg-white shadow-lg p-4 z-10">
-          <Menu setActive={setActive} className="flex flex-col">
-            {/* <MenuItem setActive={setActive} active={active} item="Data">
+        <div
+          className="fixed h-screen w-screen bg-black/5"
+          onClick={() => {
+            setIsMobileMenuOpen(false);
+          }}
+        >
+          <div className="md:hidden absolute   bg-white shadow-lg p-4 z-10">
+            <Menu setActive={setActive} className="flex flex-col">
+              {/* <MenuItem setActive={setActive} active={active} item="Data">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 {folderTree?.map((folder, i) => (
                   <DataSubLinks key={i} folder={folder} />
                 ))}
               </div>
             </MenuItem> */}
-            <ul className="space-y-3">
-              {navData?.map((navItem, index) => (
-                <NavItem
-                  key={index}
-                  title={navItem.route}
-                  url={navItem.url}
-                  subpaths={navItem.subroutes}
-                  loading={isLoading}
-                  currentPath={""}
-                />
-              ))}
-              <div className="flex flex-col">
-                {/* {navData.map((navItem, index) => (
+              <ul className="space-y-3">
+                {navData?.map((navItem, index) => (
+                  <NavItem
+                    key={index}
+                    title={navItem.route}
+                    url={navItem.url}
+                    subpaths={navItem.subroutes}
+                    loading={isLoading}
+                    currentPath={""}
+                  />
+                ))}
+                <div className="flex flex-col">
+                  {/* {navData.map((navItem, index) => (
                   <Link
                     className="rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D]"
                     key={index}
@@ -191,9 +197,10 @@ const Header = ({ full }: { full?: boolean }) => {
                     {navItem.title}
                   </Link>
                 ))} */}
-              </div>
-            </ul>
-          </Menu>
+                </div>
+              </ul>
+            </Menu>
+          </div>
         </div>
       )}
     </header>
@@ -205,7 +212,7 @@ export default Header;
 function DataSubLinks({ folder }: { folder: INavItemProps }) {
   return (
     <div className="my-1">
-      <Link href={`${folder.url}}`}>{folder.route}</Link>
+      <Link href={`${folder.url}`}>{folder.route}</Link>
       {folder?.subroutes?.map((subroute, i) => (
         <DataSubLinks key={i} folder={subroute} />
       ))}

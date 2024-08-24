@@ -7,28 +7,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
+import { IbmPlexSans } from "@/lib/fonts";
+import { TArticle } from "@/types";
+import ArticleCard from "@/components/articles/ArticleCard";
 
 export default function page() {
-  const articles = [
+  const articles: TArticle[] = [
     {
-      title: "Article 1",
-      coverImage: "https://via.placeholder.com/150",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      id: "1",
+      title: "Data & The community",
+      coverImage: "/article.png",
+      description:
+        "At OAU, we are excited to announce the launch of our new Office of Institutional Research (OIR). This office is dedicated to advancing the college's mission thro..",
       author: "John Doe",
       date: "2022-01-01",
     },
     {
+      id: "2",
       title: "Article 2",
-      coverImage: "https://via.placeholder.com/150",
-      content:
-        "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
+      coverImage: "/article.png",
+      description:
+        "At OAU, we are excited to announce the launch of our new Office of Institutional Research (OIR). This office is dedicated to advancing the college's mission thro..",
       author: "Jane Smith",
       date: "2022-01-02",
     },
     {
+      id: "3",
       title: "Article 3",
-      coverImage: "https://via.placeholder.com/150",
-      content:
+      coverImage: "/article.png",
+      description:
         "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
       author: "Robert Johnson",
       date: "2022-01-03",
@@ -36,20 +44,10 @@ export default function page() {
   ];
 
   return (
-    <div className="min-h-screen container">
-      <div className="grid xl:grid-cols-4 gap-5 md:grid-cols-3 sm:grid-cols-2 py-10">
-        {articles.map((article, index) => (
-          <Card key={index}>
-            <CardHeader></CardHeader>
-            <CardContent>
-              <img src={article.coverImage} alt="cover image" />
-            </CardContent>
-            <CardFooter className="flex flex-col items-start">
-              <CardTitle>{article.title}</CardTitle>
-              <br />
-              <CardDescription>{article.author}</CardDescription>
-            </CardFooter>
-          </Card>
+    <div className={`min-h-screen container ${IbmPlexSans.className}`}>
+      <div className="grid xl:grid-cols-3 gap-5 md:grid-cols-3 sm:grid-cols-2 py-10">
+        {articles.map((article: TArticle, index: number) => (
+          <ArticleCard key={index} article={article} />
         ))}
       </div>
     </div>
