@@ -18,6 +18,13 @@ export default function Login() {
 
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    async function checkSession() {
+      const user = await supabaseAuth.auth.getSession();
+      console.log(user);
+    }
+    checkSession();
+  }, []);
   const handleSignUp = async () => {
     await supabaseAuth.auth.signUp({
       email,

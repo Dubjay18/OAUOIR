@@ -62,7 +62,11 @@ export const FolderList: React.FC<FolderListProps> = ({
               onClick={() => handleSelectFolderOrPage(folder)}
             >
               <p className="text-xl">
-                {folder.is_folder ? "📁" : "📄"} {folder.name}
+                {folder.is_folder ? "📁" : "📄"}
+                {folder.parent_id == sortedFolders[i - 1]?.id &&
+                  folder.parent_id != null &&
+                  `${sortedFolders[i - 1]?.name}/`}
+                {folder.name}
               </p>
             </div>
             <Button

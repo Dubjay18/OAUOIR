@@ -1,4 +1,6 @@
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { Cookie } from "next/font/google";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -12,15 +14,24 @@ export async function middleware(req: NextRequest) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  console.log("Session", session);
-  console.log("Req", req.url.endsWith("/login"));
-
+  if (req.cookies.has("supabaseSession") && req.url.endsWith("/login")) {
+    return NextResponse.rewrite(new URL("/admin", req.url));
+  }
+  if (req.cookies.has("supabaseSession") && req.url.endsWith("/admin")) {
+    return res;
+  }
   if (!session && !req.url.endsWith("/login")) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.rewrite(new URL("/login", req.url));
   }
   if (session && req.url.endsWith("/login")) {
     console.log("Session", session);
-    return NextResponse.redirect(new URL("/admin", req.url));
+    const newRes = NextResponse.rewrite(new URL("/admin", req.url));
+    newRes.cookies.set("supabaseSession", session.access_token, {
+      maxAge: session.expires_in,
+      sameSite: "lax",
+    });
+
+    return newRes;
   }
 
   return res;
