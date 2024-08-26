@@ -144,7 +144,7 @@ const Header = ({ full }: { full?: boolean }) => {
             >
               <div className="grid grid-cols-2 gap-4 text-sm z-10">
                 {folderTree?.map((folder, i) => (
-                  <DataSubLinks key={i} folder={folder} />
+                  <DataSubLinks key={`datasub-${i}`} folder={folder} />
                 ))}
               </div>
             </MenuItem>

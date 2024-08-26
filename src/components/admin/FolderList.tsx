@@ -61,7 +61,7 @@ export const FolderList: React.FC<FolderListProps> = ({
               className="w-full"
               onClick={() => handleSelectFolderOrPage(folder)}
             >
-              <p className="text-3xl">
+              <p className="text-xl">
                 {folder.is_folder ? "📁" : "📄"} {folder.name}
               </p>
             </div>

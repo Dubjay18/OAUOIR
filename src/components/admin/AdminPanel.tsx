@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { FolderControls } from "./FolderControls";
 import { FolderList } from "./FolderList";
 import { EditorControls } from "./EditorControls";
+import { toast } from "sonner";
 const QuillEditor = dynamic(() => import("./Editor"), { ssr: false });
 
 enum EditorType {
@@ -45,6 +46,7 @@ const Admin: React.FC = () => {
   const refetchFolders = async () => {
     const data = await fetchFolders();
     setFolders(data);
+    console.log("refetch", data);
   };
 
   const handleAddFolder = async (folderId: string) => {
@@ -54,12 +56,14 @@ const Admin: React.FC = () => {
     console.log(newFolderName, "n1");
     try {
       addFolder(newFolderName, folderId);
+      const data = await fetchFolders();
+      setFolders(data);
       setNewFolderName("");
     } catch (err) {
       setError((err as Error).message);
     } finally {
-      setLoading(false);
       refetchFolders();
+      setLoading(false);
     }
   };
   const handleAddPage = async (folderId: string) => {
@@ -96,6 +100,7 @@ const Admin: React.FC = () => {
   const handleSaveContent = async () => {
     setLoading(true);
     setError(null);
+    console.log(loading, "loading");
 
     try {
       if (editorType == EditorType.Article) {
@@ -108,10 +113,12 @@ const Admin: React.FC = () => {
           handleFullEmbedContent(fullEmbedContent) as string
         );
       }
+      console.log("finally");
+      setLoading(false);
     } catch (err) {
       setError((err as Error).message);
     } finally {
-      setLoading(false);
+      toast("Content saved successfully");
     }
   };
 
@@ -140,8 +147,6 @@ const Admin: React.FC = () => {
     return visualizationDivs[0].getAttribute("data-full-embed");
   };
   const handleSelectFolderOrPage = (folder: Folder) => {
-    console.log(folder);
-
     setSelectedFolderId(folder.id);
     setContent(folder.content || "");
     setFullEmbedContent(getFullEmbedUrl(folder.content || "") as any);
@@ -154,8 +159,6 @@ const Admin: React.FC = () => {
 
   const handleFullEmbedContent = (content: string) => {
     if (!selectedFolderId) return;
-    console.log(content);
-
     return `<div class="visualization" data-full-embed="${content}" style="border: 1px solid rgb(204, 204, 204); padding: 10px; margin: 10px 0px; display: flex; justify-content: center; align-items: center; font-size: 1.2em; font-weight: bold; color: rgb(51, 51, 51);">Visualization: ${content}</div>`;
   };
 

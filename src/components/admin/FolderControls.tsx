@@ -157,6 +157,14 @@ function FolderDialog({
               {folder.name}
             </div>
           ))}
+          <div
+            className={` flex justify-between items-center p-2 border border-gray-200 hover:bg-slate-200 duration-300 transition-all cursor-pointer rounded-md ${
+              folderId == null && "bg-slate-200"
+            }`}
+            onClick={() => setFolderId(null)}
+          >
+            No Parent Folder
+          </div>
         </div>
         <div>
           <Button type="button" disabled={loading} onClick={() => submit()}>

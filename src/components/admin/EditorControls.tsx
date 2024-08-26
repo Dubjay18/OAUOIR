@@ -77,7 +77,11 @@ export const EditorControls: React.FC<EditorControlsProps> = ({
           <br />
           <br />
           <Button onClick={handleSaveContent} disabled={loading}>
-            Save Content
+            {loading ? (
+              <Loader2 className="animate-spin" size={24} />
+            ) : (
+              "Save Content"
+            )}
           </Button>
         </div>
       )}
