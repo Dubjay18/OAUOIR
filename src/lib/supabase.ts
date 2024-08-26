@@ -19,14 +19,11 @@ export const getPageContentByPath = async (
   let parentId: string | null = null;
 
   for (const segment of path) {
-    console.log(segment, path);
-
     // Fetch the folder/page with the current segment name and parentId
     let query = supabase
       .from("frontend_page_folders")
       .select("*")
       .eq("name", segment);
-    console.log(parentId);
 
     if (parentId) {
       query = query.eq("parent_id", parentId);
@@ -59,8 +56,6 @@ export const getPageContentByPath = async (
 
 // Add a new folder
 export const addFolder = async (name: string, parentId: string | null) => {
-  console.log(name, parentId);
-
   const { error } = await supabase
     .from("frontend_page_folders")
     .insert([{ name, parent_id: parentId, is_folder: true }]);
