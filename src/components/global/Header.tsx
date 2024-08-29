@@ -22,8 +22,8 @@ const Header = ({ full }: { full?: boolean }) => {
       subroutes: folderTree || [],
     },
     {
-      route: "Articles",
-      url: "/articles",
+      route: "Blog",
+      url: "/blog",
     },
     {
       route: "Request Data",
@@ -32,8 +32,8 @@ const Header = ({ full }: { full?: boolean }) => {
   ];
   const midNavData = [
     {
-      route: "Articles",
-      url: "/articles",
+      route: "Blog",
+      url: "/blog",
     },
     {
       route: "Request Data",

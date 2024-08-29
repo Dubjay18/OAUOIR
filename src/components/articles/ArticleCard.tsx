@@ -13,7 +13,7 @@ import Link from "next/link";
 
 function ArticleCard({ article }: { article: TArticle }) {
   return (
-    <Link href={`/articles/${article.id}`}>
+    <Link href={`/blog/${article.id}`}>
       <Card className="hover:bg-slate-200 duration-300 cursor-pointer">
         <CardHeader></CardHeader>
         <CardContent>

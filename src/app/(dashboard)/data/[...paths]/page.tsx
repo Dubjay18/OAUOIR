@@ -58,9 +58,9 @@ export default function Page({
     );
   }
   return (
-    <div className="ql-snow min-h-screen">
+    <div className="ql-snow min-h-screen ">
       <div
-        className="ql-editor !p-0 h-screen"
+        className="ql-editor p-5 container"
         dangerouslySetInnerHTML={{
           __html: renderVisualizations(content || ""),
         }}

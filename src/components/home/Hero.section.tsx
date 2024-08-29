@@ -42,9 +42,6 @@ const HeroSection = () => {
               Go to Dashboard
             </Button>
           </Link>
-          <Button variant={"outline"} size={"lg"}>
-            Quick Start
-          </Button>
         </div>
       </div>
     </div>

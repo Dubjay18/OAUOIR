@@ -33,8 +33,8 @@ export default function Nav({
           alt="blog"
         />
       ),
-      title: "Articles",
-      url: "/articles",
+      title: "Blog",
+      url: "/blog",
     },
     {
       icon: (
