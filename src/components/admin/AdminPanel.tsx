@@ -55,7 +55,7 @@ const Admin: React.FC = () => {
 
     console.log(newFolderName, "n1");
     try {
-      addFolder(newFolderName, folderId);
+      await addFolder(newFolderName, folderId);
       const data = await fetchFolders();
       setFolders(data);
       setNewFolderName("");
@@ -71,7 +71,7 @@ const Admin: React.FC = () => {
     setError(null);
 
     try {
-      addPage(newPageName, folderId);
+      await addPage(newPageName, folderId);
       const data = await fetchFolders();
       setFolders(data);
       setNewPageName("");
@@ -88,7 +88,7 @@ const Admin: React.FC = () => {
     setError(null);
 
     try {
-      deleteFolderOrPage(id);
+      await deleteFolderOrPage(id);
       setFolders(folders.filter((folder) => folder.id !== id));
     } catch (err) {
       setError((err as Error).message);
@@ -148,7 +148,11 @@ const Admin: React.FC = () => {
   };
   const handleSelectFolderOrPage = (folder: Folder) => {
     setSelectedFolderId(folder.id);
-    setContent(folder.content || "");
+    if (getFullEmbedUrl(folder.content || "") == "") {
+      setContent(folder.content || "");
+    } else {
+      setContent("");
+    }
     setFullEmbedContent(getFullEmbedUrl(folder.content || "") as any);
   };
 

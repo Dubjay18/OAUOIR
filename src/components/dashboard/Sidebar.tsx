@@ -45,12 +45,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
     ) => {
       const routeMap: Record<string, any> = {};
 
-      // Create a map of routes by their IDs
-      console.log(routes);
-
       routes.forEach((route) => {
-        console.log(route, "route");
-
         const currentPath = `${accumulatedPath}/${route.name}`;
         routeMap[route.id] = {
           route: route.name,
@@ -123,21 +118,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
     );
   }
 
-  const navData = [
-    {
-      icon: (
-        <Image
-          src="/dashboard/icons/data.svg"
-          width={24}
-          height={24}
-          alt="dashboard_data"
-        />
-      ),
-      title: "Data Browser",
-      url: "/dashboard/data",
-      subpaths: folderTree || [],
-    },
-  ];
+  const navData = folderTree || [];
   return (
     <aside
       className={`w-64 max-md:hidden bg-white shadow sticky left-0 p-4 duration-300 transition-all `}
@@ -151,9 +132,9 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
           {navData.map((navItem, index) => (
             <NavItem
               key={index}
-              title={navItem.title}
+              title={navItem.route}
               url={navItem.url}
-              subpaths={navItem.subpaths}
+              subpaths={navItem.subroutes}
               icon={navItem.icon}
               loading={isLoading}
               currentPath={pathanme}
@@ -166,9 +147,9 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
           {navData.map((navItem, index) => (
             <NavItem
               key={index}
-              title={navItem.title}
+              title={navItem.route}
               url={navItem.url}
-              subpaths={navItem.subpaths}
+              subpaths={navItem.subroutes}
               icon={navItem.icon}
               loading={isLoading}
               currentPath={pathanme}
