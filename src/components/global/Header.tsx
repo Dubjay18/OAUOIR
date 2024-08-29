@@ -100,7 +100,7 @@ const Header = ({ full }: { full?: boolean }) => {
 
   return (
     <header
-      className={`py-2 ${IbmPlexSans.className} relative  border-b border-[#ECECEC]`}
+      className={` ${IbmPlexSans.className} relative  border-b border-[#ECECEC]`}
     >
       <div
         className={`${

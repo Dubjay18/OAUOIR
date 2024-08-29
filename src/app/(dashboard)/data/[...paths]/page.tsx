@@ -1,5 +1,7 @@
 "use client";
+import { usePageContent } from "@/context/PageContentContext";
 import useDataPageContent from "@/hooks/useDataPageContent";
+import { IbmPlexSans } from "@/lib/fonts";
 import "react-quill/dist/quill.snow.css";
 export default function Page({
   params,
@@ -16,8 +18,30 @@ export default function Page({
     visualizationDivs.forEach((div) => {
       const url = div.getAttribute("data-visualization");
       const visualizationElement = document.createElement("div");
-      // Replace this with actual logic to render the visualization
-      visualizationElement.innerHTML = `<div class="iframe-container"><iframe src="${url}"></iframe></div>`;
+
+      // Adding an event listener for messages from the iframe
+      window.addEventListener("message", (event) => {
+        if (event.origin === new URL(url as string).origin) {
+          // Check that the message is from a trusted origin
+          const { height } = event.data;
+          if (height && typeof height === "number") {
+            const iframe = visualizationElement.querySelector("iframe");
+            if (iframe) {
+              iframe.style.height = `${height}px`;
+            }
+          }
+        }
+      });
+
+      visualizationElement.innerHTML = `
+        <div class="iframe-container" style="width: 100%; overflow: hidden;">
+          <iframe 
+            src="${url}" 
+            style="width: 100%; border: none;" 
+            scrolling="no"
+          ></iframe>
+        </div>
+      `;
       div.replaceWith(visualizationElement);
     });
 
@@ -29,7 +53,7 @@ export default function Page({
     const doc = parser.parseFromString(html, "text/html");
     return doc.querySelector("[data-full-embed]") !== null;
   };
-  const { content, loading, error } = useDataPageContent(params.paths);
+  const { content, loading, error } = usePageContent();
 
   const fullEmbedUrl = (html: string) => {
     const parser = new DOMParser();
@@ -60,7 +84,7 @@ export default function Page({
   return (
     <div className="ql-snow min-h-screen ">
       <div
-        className="ql-editor p-5 container"
+        className={`ql-editor p-5  max-w-2xl mx-auto ${IbmPlexSans.className}`}
         dangerouslySetInnerHTML={{
           __html: renderVisualizations(content || ""),
         }}

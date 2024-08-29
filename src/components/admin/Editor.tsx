@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
@@ -7,9 +7,23 @@ import { Button } from "../ui/button";
 
 // Import Quill and register a custom module
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+export const AvailableLineHeights = Array.from(Array(110).keys()).map(
+  (x) => `${(80 + x * 5) / 100}`
+);
 // Define a custom blot for visualization
 const BlockEmbed = Quill.import("blots/block/embed");
 
+const parchment = Quill.import("parchment");
+const lineHeightConfig = {
+  scope: parchment.Scope.INLINE,
+  whitelist: AvailableLineHeights,
+};
+const lineHeightStyle = new parchment.Attributor.Style(
+  "line-height",
+  "line-height",
+  lineHeightConfig
+);
+Quill.register(lineHeightStyle, true);
 class VisualizationBlot extends BlockEmbed {
   static blotName = "visualization";
   static tagName = "div";
@@ -38,7 +52,7 @@ class VisualizationBlot extends BlockEmbed {
 }
 
 // Register the custom blot with Quill
-Quill.register('formats/visualization', VisualizationBlot, true);
+Quill.register("formats/visualization", VisualizationBlot, true);
 
 const icons = Quill.import("ui/icons");
 icons["embedVisualization"] = `<svg viewbox="0 0 18 18"> 
@@ -49,6 +63,7 @@ const modules = {
   toolbar: {
     container: [
       [{ header: [1, 2, false] }],
+      [{ lineheight: ["1", "1.5", "2", "2.5", "3"] }],
       [{ size: [] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [
@@ -58,20 +73,19 @@ const modules = {
         { indent: "+1" },
       ],
       ["link", "image"],
-      ['bold', 'italic', 'underline', 'embedVisualization'], 
-
+      ["bold", "italic", "underline", "embedVisualization"],
     ],
     handlers: {
       embedVisualization: function (this: any) {
-        const url = prompt('Enter the URL of the visualization:');
+        const url = prompt("Enter the URL of the visualization:");
         if (url) {
           const range = this.quill.getSelection();
           if (range) {
-            this.quill.insertEmbed(range.index, 'visualization', url);
+            this.quill.insertEmbed(range.index, "visualization", url);
           }
         }
       },
-    }
+    },
   },
 };
 
@@ -79,8 +93,6 @@ const Editor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-
-
   return (
     <>
       <ReactQuill
@@ -89,6 +101,7 @@ const Editor: React.FC<{
         modules={modules}
         formats={[
           "header",
+          "lineheight",
           "font",
           "size",
           "bold",
