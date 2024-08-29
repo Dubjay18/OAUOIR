@@ -162,7 +162,7 @@ const Header = ({ full }: { full?: boolean }) => {
 
       {isMobileMenuOpen && (
         <div
-          className="fixed h-screen w-screen bg-black/5"
+          className="fixed h-screen w-screen z-10 bg-black/5"
           onClick={() => {
             setIsMobileMenuOpen(false);
           }}
