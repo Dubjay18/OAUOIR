@@ -10,7 +10,9 @@ export default function Page() {
   const router = useRouter();
   useLayoutEffect(() => {
     if (folders) {
-      router.push(`/data/${folders[0]?.name}`);
+      router.push(
+        `/data/${folders.find((folder) => folder.parent_id === null)?.name}`
+      );
     }
   }, [folders, router]);
   if (isLoading) {
