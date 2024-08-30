@@ -1,7 +1,9 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { usePageContent } from "@/context/PageContentContext";
 import useDataPageContent from "@/hooks/useDataPageContent";
 import { IbmPlexSans } from "@/lib/fonts";
+import { Loader2 } from "lucide-react";
 import "react-quill/dist/quill.snow.css";
 export default function Page({
   params,
@@ -63,11 +65,27 @@ export default function Page({
     return visualizationDivs[0].getAttribute("data-full-embed");
   };
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin" size={24} />
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p>An Error Occurred</p>
+          <Button
+            onClick={() => window.location.reload()}
+            variant={"destructive"}
+          >
+            Reload
+          </Button>
+        </div>
+      </div>
+    );
   }
   if (isFullEmbed(content || "")) {
     console.log(content, "content");
