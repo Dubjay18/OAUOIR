@@ -40,7 +40,7 @@ export default function Page() {
   return (
     <div>
       <h1 className="text-2xl font-bold underline">
-        Welcome To OAU's Real Time data dashboard
+        Welcome To OAU&apos;s Real Time data dashboard
       </h1>
       <p className="text-lg mt-4">
         This is a dashboard that displays real time data from the Obafemi
