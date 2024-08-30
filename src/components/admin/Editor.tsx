@@ -1,9 +1,8 @@
 "use client";
-import React from "react";
 import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import React from "react";
 import { Quill } from "react-quill";
-import { Button } from "../ui/button";
+import "react-quill/dist/quill.snow.css";
 
 // Import Quill and register a custom module
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -13,17 +12,18 @@ export const AvailableLineHeights = Array.from(Array(110).keys()).map(
 // Define a custom blot for visualization
 const BlockEmbed = Quill.import("blots/block/embed");
 
-const parchment = Quill.import("parchment");
-const lineHeightConfig = {
-  scope: parchment.Scope.INLINE,
-  whitelist: AvailableLineHeights,
-};
-const lineHeightStyle = new parchment.Attributor.Style(
+const Parchment = Quill.import("parchment");
+const LineHeightStyle = new Parchment.Attributor.Style(
   "line-height",
   "line-height",
-  lineHeightConfig
+  {
+    scope: Parchment.Scope.INLINE,
+    whitelist: ["1", "1.5", "2", "2.5", "3"], // Only these values will be allowed
+  }
 );
-Quill.register(lineHeightStyle, true);
+
+Quill.register(LineHeightStyle, true);
+
 class VisualizationBlot extends BlockEmbed {
   static blotName = "visualization";
   static tagName = "div";
@@ -63,7 +63,7 @@ const modules = {
   toolbar: {
     container: [
       [{ header: [1, 2, false] }],
-      [{ lineheight: ["1", "1.5", "2", "2.5", "3"] }],
+      [{ "line-height": ["1", "1.5", "2", "2.5", "3"] }],
       [{ size: [] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [
@@ -101,7 +101,7 @@ const Editor: React.FC<{
         modules={modules}
         formats={[
           "header",
-          "lineheight",
+          "line-height",
           "font",
           "size",
           "bold",
