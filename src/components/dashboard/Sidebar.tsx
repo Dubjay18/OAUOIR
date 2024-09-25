@@ -142,7 +142,12 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
           ))}
         </ul>
       </nav>
-      <nav className="max-md:hidden">
+      <nav
+        className={`max-md:hidden  ${
+          hidden && "-translate-x-[300px] w-0 h-0 hidden"
+        }
+        `}
+      >
         <ul className="space-y-3">
           {navData.map((navItem, index) => (
             <NavItem
