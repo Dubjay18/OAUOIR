@@ -19,11 +19,17 @@ export default function Dashlayout({
     <div className="overflow-y-hidden  h-auto">
       <Header full />
       <div className="flex  relative bg-white overflow-hidden w-auto h-[90vh]">
-        <Button variant={"ghost"} onClick={toggleMobileNav}>
+        <Button variant={"ghost"} size={"sm"} onClick={toggleMobileNav}>
           {mobileNav ? (
-            <ChevronRight size={20} className="text-primary" />
+            <ChevronRight
+              size={20}
+              className="text-primary max-md:w-3 max-md:h-3"
+            />
           ) : (
-            <ChevronLeft size={20} className="text-primary" />
+            <ChevronLeft
+              size={20}
+              className="text-primary max-md:w-3 max-md:h-3"
+            />
           )}
         </Button>
         <Sidebar hidden={mobileNav} />
