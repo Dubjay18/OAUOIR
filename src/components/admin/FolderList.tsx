@@ -49,7 +49,7 @@ export const FolderList: React.FC<FolderListProps> = ({
   return (
     <div>
       <h2 className="text-2xl font-semibold my-5">Folder/Page List</h2>
-      <div>
+      <div className="h-[40vh] overflow-y-scroll ">
         {sortedFolders.map((folder, i) => (
           <div
             className={`flex justify-between items-center p-2 border border-gray-200 hover:bg-slate-200 ${

@@ -70,6 +70,7 @@ export const FolderControls: React.FC<FolderControlsProps> = ({
           setFolderId={setFolderId}
           folders={routes}
           open={openFolder}
+          setOpen={setOpenFolder}
           submit={dialogSubmitFolder}
           loading={loading}
         >
@@ -101,6 +102,7 @@ export const FolderControls: React.FC<FolderControlsProps> = ({
           setFolderId={setFolderId}
           folders={routes}
           open={open}
+          setOpen={setOpen}
           submit={dialogSubmit}
           loading={loading}
         >
@@ -123,6 +125,7 @@ function FolderDialog({
   folders,
   children,
   open,
+  setOpen,
   submit,
   loading,
 }: {
@@ -131,12 +134,13 @@ function FolderDialog({
   setFolderId: (id: string | null) => void;
   children: React.ReactNode;
   open: boolean;
+  setOpen: (open: boolean) => void;
   submit: () => void;
   loading: boolean;
 }) {
   let onlyFolders = folders.filter((folder) => folder.is_folder);
   return (
-    <Dialog modal open={open}>
+    <Dialog modal onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -145,9 +149,17 @@ function FolderDialog({
             Choose a folder to add a new page to
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 h-[40vh] overflow-y-scroll">
+          <button
+            className={` flex justify-between items-center p-2 border border-gray-200 hover:bg-slate-200 duration-300 transition-all cursor-pointer rounded-md ${
+              folderId == null && "bg-slate-200"
+            }`}
+            onClick={() => setFolderId(null)}
+          >
+            No Parent Folder
+          </button>
           {onlyFolders.map((folder) => (
-            <div
+            <button
               className={` flex justify-between items-center p-2 border border-gray-200 hover:bg-slate-200 duration-300 transition-all cursor-pointer rounded-md ${
                 folderId == folder?.id && "bg-slate-200"
               }`}
@@ -155,16 +167,8 @@ function FolderDialog({
               onClick={() => setFolderId(folder.id)}
             >
               {folder.name}
-            </div>
+            </button>
           ))}
-          <div
-            className={` flex justify-between items-center p-2 border border-gray-200 hover:bg-slate-200 duration-300 transition-all cursor-pointer rounded-md ${
-              folderId == null && "bg-slate-200"
-            }`}
-            onClick={() => setFolderId(null)}
-          >
-            No Parent Folder
-          </div>
         </div>
         <div>
           <Button type="button" disabled={loading} onClick={() => submit()}>
