@@ -121,7 +121,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   const navData = folderTree || [];
   return (
     <aside
-      className={`w-64 ${hidden && "md:!w-fit !w-0 p-0"}  max-h-[90vh] overflow-y-scroll  max-md:w-full bg-white shadow sticky left-0 p-4 duration-300 transition-all `}
+      className={`w-64 ${hidden && "md:!w-fit !w-0 p-0"}  max-h-[90vh] overflow-y-scroll sidebar-scroll  max-md:w-full bg-white shadow sticky left-0 p-4 duration-300 transition-all `}
     >
       <nav
         className={`md:hidden  ${
