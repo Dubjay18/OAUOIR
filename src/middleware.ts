@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL("/login", req.url));
   }
   if (session && req.url.endsWith("/login")) {
-    console.log("Session", session);
+    // console.log("Session", session);
     const newRes = NextResponse.rewrite(new URL("/admin", req.url));
     newRes.cookies.set("supabaseSession", session.access_token, {
       maxAge: session.expires_in,

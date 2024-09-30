@@ -26,26 +26,30 @@ export const FolderList: React.FC<FolderListProps> = ({
     // Create a new array for sorted output
     const sorted: Folder[] = [];
 
-    // Function to recursively add an item and its parents
-    function addNodeAndParents(node: any) {
-      if (node.parent_id) {
-        const parent = nodeMap.get(node.parent_id);
-        if (!sorted.includes(parent)) {
-          addNodeAndParents(parent);
-        }
-      }
+    // Function to recursively add an item and its children
+    function addNodeAndChildren(node: any) {
       if (!sorted.includes(node)) {
         sorted.push(node);
       }
+      const children = data.filter((item) => item.parent_id === node.id);
+      children.forEach((child) => addNodeAndChildren(child));
     }
 
     // Iterate over the original data array
-    data.forEach((item) => addNodeAndParents(item));
+    data.forEach((item) => {
+      if (!item.parent_id) {
+        addNodeAndChildren(item);
+      }
+    });
 
     return sorted;
   }
   const sortedFolders = sortByParentChildRelationship(folders);
 
+  function getItemById(id: string) {
+    let item = sortedFolders.find((item) => item.id === id);
+    return item;
+  }
   return (
     <div>
       <h2 className="text-2xl font-semibold my-5">Folder/Page List</h2>
@@ -63,9 +67,8 @@ export const FolderList: React.FC<FolderListProps> = ({
             >
               <p className="text-xl">
                 {folder.is_folder ? "📁" : "📄"}
-                {folder.parent_id == sortedFolders[i - 1]?.id &&
-                  folder.parent_id != null &&
-                  `${sortedFolders[i - 1]?.name}/`}
+                {folder.parent_id != null &&
+                  `${getItemById(folder.parent_id)?.name}/`}
                 {folder.name}
               </p>
             </div>

@@ -142,7 +142,7 @@ const Header = ({ full }: { full?: boolean }) => {
               active={active}
               item="Data"
             >
-              <div className="grid grid-cols-2 gap-4 text-sm z-10">
+              <div className="grid grid-cols-2 gap-4 text-sm z-10 h-[150px] overflow-y-scroll">
                 {folderTree?.map((folder, i) => (
                   <DataSubLinks key={`datasub-${i}`} folder={folder} />
                 ))}
