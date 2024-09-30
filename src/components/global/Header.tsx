@@ -176,7 +176,7 @@ const Header = ({ full }: { full?: boolean }) => {
                 ))}
               </div>
             </MenuItem> */}
-              <ul className="space-y-3">
+              <ul className="space-y-3 h-[90vh] overflow-y-auto">
                 {navData?.map((navItem, index) => (
                   <NavItem
                     key={index}
