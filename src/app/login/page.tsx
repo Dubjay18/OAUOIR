@@ -21,7 +21,6 @@ export default function Login() {
   useEffect(() => {
     async function checkSession() {
       const user = await supabaseAuth.auth.getSession();
-      console.log(user);
     }
     checkSession();
   }, []);
