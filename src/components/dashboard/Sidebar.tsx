@@ -13,6 +13,7 @@ import { fetchFolders } from "@/lib/supabase";
 import { DataFolderContext } from "@/context/DataFolderContext";
 import { Skeleton } from "../ui/skeleton";
 import { usePathname } from "next/navigation";
+import { fetchData } from "@/sanity/lib/client";
 
 interface NavItemProps {
   title: string;
@@ -37,6 +38,53 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
   const { data: folders, isLoading, isError } = useContext(DataFolderContext);
   const [folderTree, setFolderTree] = useState<INavItemProps[] | null>(null);
   const pathanme = usePathname();
+
+  useEffect(() => {
+    async function fetchFoldersData() {
+      try {
+        const result = await fetchData();
+        const filteredResult = formatR(result);
+        console.log(filteredResult, "filteredResult");
+      } catch (error) {
+        console.error("Error fetching folders:", error);
+      }
+    }
+    const formatR = async (
+      data: { _id: string; name: string; parentId: any }[],
+      parentId = null
+    ) => {
+      const routeMap: Record<string, any> = {};
+
+      data.forEach((route) => {
+        routeMap[route._id] = {
+          route: route.name,
+          subroutes: [],
+          parentId: route.parentId,
+        };
+      });
+
+      // Populate the subroutes
+      data.forEach((route) => {
+        if (route.parentId) {
+          routeMap[route.parentId._id].subroutes.push(routeMap[route._id]);
+        }
+      });
+
+      // Return the top-level routes (those without a parent)
+      return data
+        .filter((route) => route.parentId === parentId)
+        .map((route) => formatRoutesHelper(routeMap[route._id], routeMap));
+    };
+    const formatRoutesHelper = (route: any, routeMap: Record<string, any>) => {
+      route.subroutes = route.subroutes.map((subroute: any) => {
+        return formatRoutesHelper({ ...subroute }, routeMap);
+      });
+
+      return route;
+    };
+    fetchFoldersData();
+  }, []);
+
   useEffect(() => {
     const formatRoutes = (
       routes: Folder[],

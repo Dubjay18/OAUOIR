@@ -51,3 +51,17 @@ export async function fetchPageContent(id: string) {
     throw new Error("Failed to fetch page content.");
   }
 }
+
+export async function fetchData() {
+  const query = `*[_type == "page"]{
+    _id,
+    name,
+    parentId->{
+      _id,
+      name
+    },
+  }`;
+
+  const result = await client.fetch(query);
+  return result;
+}
