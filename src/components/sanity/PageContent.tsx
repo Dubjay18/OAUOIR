@@ -84,11 +84,10 @@ const PageContent = ({ id }: { id: string }) => {
       </div>
     );
   }
-  console.log(content, "ksks");
 
   // If it's article content, render it as HTML
   return (
-    <div className="article-content">
+    <div className="article-content p-5  max-w-2xl mx-auto ">
       <PortableText
         value={content?.content}
         components={customComponents as any}

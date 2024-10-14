@@ -8,12 +8,29 @@ import { DataFolderContext } from "@/context/DataFolderContext";
 import { MenuItem } from "./MenuItem";
 import { Folder, INavItemProps, NavItem } from "../dashboard/Sidebar";
 import { MenuIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@/sanity/lib/client";
 
 const Header = ({ full }: { full?: boolean }) => {
   const { data: folders, isLoading, isError } = useContext(DataFolderContext);
   const [active, setActive] = useState<string | null>(null);
   const [folderTree, setFolderTree] = useState<INavItemProps[] | null>(null);
+  const [sanityFolderTree, setSanityFolderTree] = useState<
+    | {
+        route: string;
+        url: string;
+        subroutes: any[];
+      }[]
+    | null
+  >(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mainUrlPath = "/sanity";
+  const {
+    data: sanityFolders,
+    isLoading: sanityIsLoading,
+    isError: sanityIsError,
+    refetch: sanityRefetch,
+  } = useQuery({ queryKey: ["sanity"], queryFn: fetchData });
 
   const navData = [
     {
@@ -40,6 +57,47 @@ const Header = ({ full }: { full?: boolean }) => {
       url: "/request-data",
     },
   ];
+  useEffect(() => {
+    const formatR = (
+      data: { _id: string; name: string; parentId: any }[],
+      parentId = null
+    ) => {
+      const routeMap: Record<string, any> = {};
+
+      data.forEach((route) => {
+        routeMap[route._id] = {
+          route: route.name,
+          url: `${mainUrlPath}/${route._id}`,
+          subroutes: [],
+          parentId: route.parentId,
+        };
+      });
+
+      // Populate the subroutes
+      data.forEach((route) => {
+        if (route.parentId) {
+          routeMap[route.parentId._id].subroutes.push(routeMap[route._id]);
+        }
+      });
+
+      // Return the top-level routes (those without a parent)
+      return data
+        .filter((route) => route.parentId === parentId)
+        .map((route) => formatRoutesHelper(routeMap[route._id], routeMap));
+    };
+    const formatRoutesHelper = (route: any, routeMap: Record<string, any>) => {
+      route.subroutes = route.subroutes.map((subroute: any) => {
+        return formatRoutesHelper({ ...subroute }, routeMap);
+      });
+
+      return route;
+    };
+    if (sanityFolders) {
+      const tree = formatR(sanityFolders);
+      setSanityFolderTree(tree);
+    }
+  }, [sanityFolders]);
+
   useEffect(() => {
     const formatRoutes = (
       routes: Folder[],
@@ -143,7 +201,7 @@ const Header = ({ full }: { full?: boolean }) => {
               item="Data"
             >
               <div className="grid grid-cols-2 gap-4 text-sm z-10 h-[150px] overflow-y-scroll">
-                {folderTree?.map((folder, i) => (
+                {sanityFolderTree?.map((folder, i) => (
                   <DataSubLinks key={`datasub-${i}`} folder={folder} />
                 ))}
               </div>
@@ -209,7 +267,15 @@ const Header = ({ full }: { full?: boolean }) => {
 
 export default Header;
 
-function DataSubLinks({ folder }: { folder: INavItemProps }) {
+function DataSubLinks({
+  folder,
+}: {
+  folder: {
+    route: string;
+    url: string;
+    subroutes: any[];
+  };
+}) {
   return (
     <div className="my-1">
       <Link href={`${folder.url}`}>{folder.route}</Link>

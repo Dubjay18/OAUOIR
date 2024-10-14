@@ -1,19 +1,12 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { poppins } from "@/lib/fonts";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { fetchFolders } from "@/lib/supabase";
-import { DataFolderContext } from "@/context/DataFolderContext";
 import { Skeleton } from "../ui/skeleton";
 import { usePathname } from "next/navigation";
 import { fetchData } from "@/sanity/lib/client";
+import { useQuery } from "@tanstack/react-query";
 
 interface NavItemProps {
   title: string;
@@ -34,22 +27,29 @@ export interface Folder {
   is_folder: boolean;
   content: string | null;
 }
+
 export default function Sidebar({ hidden }: { hidden?: boolean }) {
-  const { data: folders, isLoading, isError } = useContext(DataFolderContext);
-  const [folderTree, setFolderTree] = useState<INavItemProps[] | null>(null);
+  const mainUrlPath = "/sanity";
+  const {
+    data: sanityFolders,
+    isLoading: sanityIsLoading,
+    isError: sanityIsError,
+    refetch: sanityRefetch,
+  } = useQuery({ queryKey: ["sanity"], queryFn: fetchData });
+
+  const [sanityFolderTree, setSanityFolderTree] = useState<
+    | {
+        route: string;
+        url: string;
+        subroutes: any[];
+      }[]
+    | null
+  >(null);
+
   const pathanme = usePathname();
 
   useEffect(() => {
-    async function fetchFoldersData() {
-      try {
-        const result = await fetchData();
-        const filteredResult = formatR(result);
-        console.log(filteredResult, "filteredResult");
-      } catch (error) {
-        console.error("Error fetching folders:", error);
-      }
-    }
-    const formatR = async (
+    const formatR = (
       data: { _id: string; name: string; parentId: any }[],
       parentId = null
     ) => {
@@ -58,6 +58,7 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
       data.forEach((route) => {
         routeMap[route._id] = {
           route: route.name,
+          url: `${mainUrlPath}/${route._id}`,
           subroutes: [],
           parentId: route.parentId,
         };
@@ -82,74 +83,13 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
 
       return route;
     };
-    fetchFoldersData();
-  }, []);
-
-  useEffect(() => {
-    const formatRoutes = (
-      routes: Folder[],
-      parentId = null,
-      accumulatedPath = "/data"
-    ) => {
-      const routeMap: Record<string, any> = {};
-
-      routes.forEach((route) => {
-        const currentPath = `${accumulatedPath}/${route.name}`;
-        routeMap[route.id] = {
-          route: route.name,
-          content: route.content,
-          url: currentPath, // Add the accumulated path to the route
-          subroutes: [],
-          parentId: route.parent_id,
-        };
-      });
-
-      // Populate the subroutes
-      routes.forEach((route) => {
-        if (route.parent_id) {
-          routeMap[route.parent_id].subroutes.push(routeMap[route.id]);
-        }
-      });
-
-      // Return the top-level routes (those without a parent)
-      return routes
-        .filter((route) => route.parent_id === parentId)
-        .map((route) =>
-          formatRoutesHelper(routeMap[route.id], routeMap, accumulatedPath)
-        );
-    };
-
-    // Helper function to recursively build the folder tree with accumulated paths
-    const formatRoutesHelper = (
-      route: any,
-      routeMap: Record<string, any>,
-      accumulatedPath: string
-    ) => {
-      console.log(routeMap, "routeMap");
-      console.log(accumulatedPath);
-      if (route.parentId === null) {
-        accumulatedPath = `/data/${route.route}`;
-      }
-      route.subroutes = route.subroutes.map((subroute: any) => {
-        const updatedPath = `${accumulatedPath}/${subroute.route}`;
-        console.log(updatedPath, "updatedPath");
-
-        return formatRoutesHelper(
-          { ...subroute, url: updatedPath },
-          routeMap,
-          updatedPath
-        );
-      });
-
-      return route;
-    };
-    if (folders) {
-      const tree = formatRoutes(folders);
-      setFolderTree(tree);
+    if (sanityFolders) {
+      const tree = formatR(sanityFolders);
+      setSanityFolderTree(tree);
     }
-  }, [folders]);
+  }, [sanityFolders]);
 
-  if (!folders) {
+  if (sanityIsLoading) {
     return (
       <aside
         className={`w-64 bg-white shadow left-0 p-4 duration-300 transition-all ${
@@ -166,7 +106,8 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
     );
   }
 
-  const navData = folderTree || [];
+  const sanityNavData = sanityFolderTree || [];
+
   return (
     <aside
       className={`w-64 ${hidden && "md:!w-fit !w-0 p-0"}  max-h-[90vh] overflow-y-scroll sidebar-scroll  max-md:w-full bg-white shadow sticky left-0 p-4 duration-300 transition-all `}
@@ -177,14 +118,13 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
         }`}
       >
         <ul className="space-y-3">
-          {navData.map((navItem, index) => (
-            <NavItem
+          {sanityNavData?.map((navItem, index) => (
+            <SanityNavItem
               key={index}
               title={navItem.route}
               url={navItem.url}
               subpaths={navItem.subroutes}
-              icon={navItem.icon}
-              loading={isLoading}
+              loading={sanityIsLoading}
               currentPath={pathanme}
             />
           ))}
@@ -197,14 +137,13 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
         `}
       >
         <ul className="space-y-3">
-          {navData.map((navItem, index) => (
-            <NavItem
+          {sanityNavData?.map((navItem, index) => (
+            <SanityNavItem
               key={index}
               title={navItem.route}
               url={navItem.url}
               subpaths={navItem.subroutes}
-              icon={navItem.icon}
-              loading={isLoading}
+              loading={sanityIsLoading}
               currentPath={pathanme}
             />
           ))}
@@ -213,6 +152,100 @@ export default function Sidebar({ hidden }: { hidden?: boolean }) {
     </aside>
   );
 }
+
+export const SanityNavItem = ({
+  title,
+  url,
+  subpaths,
+  loading,
+  currentPath,
+}: {
+  title: string;
+  url: string;
+  subpaths?: INavItemProps[];
+  loading?: boolean;
+  currentPath?: string;
+}) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const toggleOpen = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <>
+      {subpaths && !!subpaths.length ? (
+        <div>
+          <div
+            className={`rounded-md w-full p-2 my-2 hover:bg-[#63ABFD4D] ${
+              currentPath == url && "bg-[#63ABFD4D]"
+            }`}
+          >
+            <span className={`flex items-center gap-5 ${poppins.className}`}>
+              <Link href={url}> {title}</Link>
+              <div onClick={toggleOpen} className="ml-auto">
+                {isOpen ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 ml-auto mr-3 cursor-pointer" />
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 ml-auto mr-3 cursor-pointer" />
+                  </>
+                )}
+              </div>
+            </span>
+          </div>
+          {isOpen && (
+            <>
+              {loading ? (
+                <div className="rounded-md w-full p-2 my-2  bg-[#63ABFD4D]">
+                  <Skeleton className="h-4 w-[150px] cursor-wait" />
+                </div>
+              ) : (
+                <div className="ml-4">
+                  <ul>
+                    {subpaths.map((subpath, index) => (
+                      <SanityNavItem
+                        key={index}
+                        title={subpath.route}
+                        url={subpath.url}
+                        subpaths={subpath.subroutes}
+                        currentPath={currentPath}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="">
+          {loading ? (
+            <div className="rounded-md w-full p-2 my-3  hover:bg-[#63ABFD4D]">
+              <Skeleton className="h-4 w-[150px] cursor-wait" />
+            </div>
+          ) : (
+            <div
+              className={`rounded-md w-full p-
+              2 my-3  hover:bg-[#63ABFD4D] ${
+                currentPath == url && "bg-[#63ABFD4D]"
+              }`}
+            >
+              <Link
+                href={url}
+                className={`flex items-center gap-5 ${poppins.className}`}
+              >
+                {title}
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+};
 
 export const NavItem = ({
   title,
