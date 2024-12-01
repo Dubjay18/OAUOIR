@@ -9,7 +9,15 @@ import { MenuItem } from "./MenuItem";
 import { Folder, INavItemProps, NavItem } from "../dashboard/Sidebar";
 import { MenuIcon } from "lucide-react";
 
-const Header = ({ full }: { full?: boolean }) => {
+const Header = ({
+  full,
+  dashboard,
+  isSidebar,
+}: {
+  full?: boolean;
+  dashboard?: boolean;
+  isSidebar?: boolean;
+}) => {
   const { data: folders, isLoading, isError } = useContext(DataFolderContext);
   const [active, setActive] = useState<string | null>(null);
   const [folderTree, setFolderTree] = useState<INavItemProps[] | null>(null);
@@ -107,22 +115,26 @@ const Header = ({ full }: { full?: boolean }) => {
           !full ? "container" : "px-5"
         } py-2 flex items-center justify-between`}
       >
-        <Link href={"/"}>
-          <div className={"flex items-center gap-3"}>
-            <Image
-              src={"/oau_logo.svg"}
-              alt={"OAU Logo"}
-              width={40}
-              height={40}
-            />
-            <h1
-              className={`${IbmPlexSans.className} text-primary font-semibold text-xl`}
-            >
-              OAUOIR
-            </h1>
-          </div>
-        </Link>
-
+        {" "}
+        {dashboard && isSidebar ? (
+          <div />
+        ) : (
+          <Link href={"/"}>
+            <div className={"flex items-center gap-3"}>
+              <Image
+                src={"/oau_logo.svg"}
+                alt={"OAU Logo"}
+                width={40}
+                height={40}
+              />
+              <h1
+                className={`${IbmPlexSans.className} text-primary font-semibold text-xl`}
+              >
+                OAUOIR
+              </h1>
+            </div>
+          </Link>
+        )}
         <div className="flex items-center md:hidden ml-auto">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -131,7 +143,6 @@ const Header = ({ full }: { full?: boolean }) => {
             <MenuIcon size={24} />
           </button>
         </div>
-
         <div
           className={`flex items-center max-md:hidden relative lg:gap-12 md:gap-8 gap-4 text-lg ${IbmPlexSans.className}`}
         >

@@ -13,7 +13,7 @@ export const DataFolderProvider: React.FC<DataFolderProviderProps> = ({
 }) => {
   const query = useQuery({ queryKey: ["folders"], queryFn: fetchFolders });
   return (
-    <DataFolderContext.Provider value={query}>
+    <DataFolderContext.Provider value={query as any}>
       {children}
     </DataFolderContext.Provider>
   );
