@@ -1,7 +1,4 @@
-import Dashlayout from "@/components/dashboard/Dashlayout";
 import { PageContentProvider } from "@/context/PageContentContext";
-import { DataFolderProvider } from "@/providers/Datafolderprovider";
-
 export default function Layout({
   children,
   params,

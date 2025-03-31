@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { usePageContent } from "@/context/PageContentContext";
-import useDataPageContent from "@/hooks/useDataPageContent";
 import { IbmPlexSans } from "@/lib/fonts";
 import { Loader2 } from "lucide-react";
 import "react-quill/dist/quill.snow.css";
@@ -88,8 +87,6 @@ export default function Page({
     );
   }
   if (isFullEmbed(content || "")) {
-    console.log(content, "content");
-
     return (
       <div className="embed-container">
         <iframe
